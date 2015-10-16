@@ -10,3 +10,6 @@
 
 # ignore log files :)
 log/*.log
+
+# ignore tmp files
+tmp/
