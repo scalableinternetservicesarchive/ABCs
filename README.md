@@ -4,6 +4,8 @@ Market Chirp is a stock recommendation web application developed in the context 
 
 Updates to the project can be found in the [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/1446710).
 
+<img src="https://travis-ci.org/scalableinternetservices/ABCs.svg?branch=master">
+
 ## Team - ABCs
 - [Brandon Woo](https://github.com/bmwwoo) <img src="https://avatars1.githubusercontent.com/u/5299614?v=3&s=460" height="128px"/>
 - [Chris Konstad](https://github.com/chriskonstad) <img src="https://avatars1.githubusercontent.com/u/1539144?v=3&s=460" height="128px"/>
