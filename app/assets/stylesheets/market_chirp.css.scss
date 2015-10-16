@@ -6,6 +6,7 @@
 @import "bootstrap";
 
 .starter-template {
+  margin-top: 25%;
   padding: 40px 15px;
   text-align: center;
 }
@@ -14,6 +15,11 @@
 
 body {
   padding-top: 60px;
+  background: url('/assets/wolfofWS.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position-x: center;
 }
 
 section {
@@ -37,6 +43,9 @@ div#mc {
   background-color: rgb(253, 184, 20);
   font-weight: bolder;
   color: black;
+  border: black;
+  border-width: thick;
+  border-style: solid;
 }
 
 .info-section {
