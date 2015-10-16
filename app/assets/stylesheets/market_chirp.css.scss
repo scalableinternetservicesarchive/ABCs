@@ -46,6 +46,8 @@ div#mc {
   border: black;
   border-width: thick;
   border-style: solid;
+  border-radius: 5px;
+  margin-bottom: 50px;
 }
 
 .info-section {
@@ -54,5 +56,10 @@ div#mc {
   color: black;
   padding-left: 5px;
   padding-right: 5px;
-  margin: 10px;
+  /*margin: 10px;*/
+  margin-top: 20px;
+  border: black;
+  border-width: thick;
+  border-style: solid;
+  border-radius: 5px;
 }
