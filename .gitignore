@@ -7,3 +7,6 @@
 
 # dirty emacs users :(
 *~
+
+# ignore log files :)
+log/*.log
