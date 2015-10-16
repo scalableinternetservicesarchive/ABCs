@@ -1,0 +1,9 @@
+# OSX
+*.DS_STORE
+
+# vim
+*.swo
+*.swp
+
+# dirty emacs users :(
+*~
