@@ -3,4 +3,4 @@ rvm:
  - "2.2.1"
 
 before_script:
-    - mysql -e 'create database market_chirp_db;'
+    - mysql -e 'create database my_test;'
