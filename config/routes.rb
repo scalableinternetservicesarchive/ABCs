@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'market_chirp#index'
 
+  # sentiment test page
+  get 'sent' => 'sent#check'
+  post 'sent' => 'sent'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
