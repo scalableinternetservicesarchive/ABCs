@@ -2,6 +2,10 @@ source 'https://rubygems.org'
 
 # Bootstrap
 gem 'bootstrap-sass', '3.2.0.0'
+
+# Use mysql as the database for Active Record
+gem 'mysql2', '~> 0.3.13'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
 # Use SCSS for stylesheets
@@ -36,8 +40,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
   # console
   gem 'byebug'
-  # Use mysql as the database for Active Record
-  gem 'mysql2', '~> 0.3.18'
 end
 
 group :development do
