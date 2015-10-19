@@ -37,11 +37,27 @@
         <li><a href="/#about">About</a></li>
         <li><a href="/#contact">Contact</a></li>
       </ul>
+      <p class="navbar-text pull-right">
+        <% if user_signed_in? %>
+          Logged in as <strong><%= current.user_email %></strong>
+          <%= link_to "Edit profile", edit_user_registration_path, :class => 'navbar-link' %> |
+          <%= link_to "Logout", destroy_user_session_path, meth: :delete, :class => 'navbar-link' %>
+        <% else %>
+          <%= link_to "Sign Up", new_user_registration_path, :class => 'navbar-link' %> |
+          <%= link_to "Login", new_user_session_path, :class => 'navbar-link' %>
+        <% end %>
+      </p>
     </div><!--/.nav-collapse -->
   </div>
 </nav>
 
 <div class="container">
+  <% if notice %>
+    <p class="alert alert-success"><%= notice %>
+  <% end %>
+  <% if alert %>
+    <p class="alert alert-danger"><%= alert %>
+  <% end %>
   <%= yield %>
 </div><!-- /.container -->
 
