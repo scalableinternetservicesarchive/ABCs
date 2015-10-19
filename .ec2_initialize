@@ -1,2 +1,3 @@
 sudo yum install -y patch
-sudo yum install -y sqlite-devel
+sudo yum install -y mysql
+mysqld & #might not need?
