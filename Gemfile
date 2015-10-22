@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 # Bootstrap
 gem 'bootstrap-sass', '3.2.0.0'
 
+# Sentimentalizer
+gem 'sentimentalizer'
+
 # Use mysql as the database for Active Record
 gem 'mysql2', '~> 0.3.13'
 
