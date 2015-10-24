@@ -11,8 +11,8 @@ require 'csv'
 
 # Load up the list of all companies and their name, symbol, sector, industry
 CSV.foreach('db/csv/companies.csv',
-            headers: 'true',
-            header_converters: 'symbol') do |row|
+            headers: true,
+            header_converters: :symbol) do |row|
               c = Company.new
               c.industry = row[:industry]
               c.name = row[:name]
