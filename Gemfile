@@ -1,5 +1,11 @@
 source 'https://rubygems.org'
 
+# hide env files
+gem 'dotenv-rails', :groups => [:development, :test]
+
+# twitter api
+gem 'twitter'
+
 # Bootstrap
 gem 'bootstrap-sass', '3.2.0.0'
 
