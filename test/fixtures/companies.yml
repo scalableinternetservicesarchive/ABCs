@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  symbol: MyString
-  name: MyString
-  sector: MyString
-  industry: MyString
+  symbol: AAPL
+  name: Apple
+  sector: Computers
+  industry: Computers
 
 two:
-  symbol: MyString
-  name: MyString
-  sector: MyString
-  industry: MyString
+  symbol: GOOGL
+  name: Google
+  sector: Computers
+  industry: Computers
