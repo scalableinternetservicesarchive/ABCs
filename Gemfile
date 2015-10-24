@@ -6,6 +6,8 @@ gem 'bootstrap-sass', '3.2.0.0'
 # Use mysql as the database for Active Record
 gem 'mysql2', '~> 0.3.13'
 
+# Use Devise for user sign up and authentication
+gem 'devise'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
 # Use SCSS for stylesheets
