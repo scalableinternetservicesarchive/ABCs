@@ -15,7 +15,7 @@
 
 <div class="info-section">
   Enter keywords separated by spaces ($TSLA, $GOOG, etc.)
-  <%= form_tag market_chirp_path, :method => "get" do %>
+  <%= form_tag({}, method: "get") do %>
     <p>
       <%= text_field_tag :search, params[:search] %>
       <%= submit_tag "Search", :name => nil %>
