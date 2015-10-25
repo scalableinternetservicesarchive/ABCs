@@ -1,0 +1,15 @@
+<h4>Enter stock ticker from NASDAQ:</h4>
+
+<%= form_tag do %>
+  <%= label_tag(:stock, "Ticker:") %>
+  <%= text_field_tag(:stock) %>
+  <%= submit_tag("Get stock data") %>
+<% end %>
+
+<% if @quotes %>
+  <pre>
+    <% @quotes.each do |symbol, qt| %>
+      <%= qt %>
+    <% end %>
+  </pre>
+<% end %>

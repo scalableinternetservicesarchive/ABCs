@@ -1,0 +1,2 @@
+module YahooFinanceHelper
+end
