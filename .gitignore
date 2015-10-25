@@ -13,3 +13,6 @@ log/*.log
 
 # ignore tmp files
 tmp/
+
+# ignore the environment variables
+.env

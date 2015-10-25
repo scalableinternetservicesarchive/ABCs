@@ -1,0 +1,4 @@
+# Don't check these database files
+db/schema.rb
+db/migrate/*
+db/csv/*
