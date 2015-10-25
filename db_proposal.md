@@ -6,6 +6,8 @@ Company
 ========
 * Ticker (string, unique)
 * Name (string)
+* Industry (string)
+* Sector (string)
 
 PricePoint (historical, current)
 ===========
