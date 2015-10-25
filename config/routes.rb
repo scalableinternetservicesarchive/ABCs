@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'market_chirp#index'
 
+  get 'stocks' => 'yahoo_finance#stocks'
+  post 'stocks' => 'yahoo_finance#get_data'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
