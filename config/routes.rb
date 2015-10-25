@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
+
   devise_for :users
-  get 'market_chirp/index'
+  get 'market_chirp/index', as: :market_chirp
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
