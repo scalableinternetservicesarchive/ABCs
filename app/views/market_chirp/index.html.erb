@@ -12,3 +12,24 @@
   <h3 class="text-left">Who We Are</h3>
   <p class="lead">We are a team of UCLA CS 188 engineering students who can quickly and reliably deliver valuable stock trading information in an intuitive manner.</p>
 </div>
+
+<div class="info-section">
+  Enter keywords separated by spaces ($TSLA, $GOOG, etc.)
+  <%= form_tag({}, method: "get") do %>
+    <p>
+      <%= text_field_tag :search, params[:search] %>
+      <%= submit_tag "Search", :name => nil %>
+    </p>
+  <% end %>
+
+  <% if @searching %>
+    <h4><%= @tweets.count %> results for <%= @query %> excluding retweets.</h4>
+
+    <hr>
+      <% @tweets.each do |t| %>
+      <%= t.text %>
+    <hr>
+    <% end %>
+
+  <% end %>
+</div>
