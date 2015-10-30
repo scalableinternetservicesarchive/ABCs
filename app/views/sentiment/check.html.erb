@@ -1,7 +1,7 @@
 <%= form_tag({}, method: 'get', :id => 'submit_container') do %>
   <%= label_tag(:tweet, 'Symbol:') %>
   <%= text_field_tag(:symbol) %>
-  <%= submit_tag('Sentimentalize') %>
+  <%= submit_tag('Sentimentalize', class: 'btn btn-primary') %>
 <% end %>
 
 <script language="javascript" type="text/javascript">
