@@ -1,9 +1,61 @@
-<%= form_tag do %>
-  <%= label_tag(:tweet, "Text:") %>
-  <%= text_field_tag(:tweet) %>
-  <%= submit_tag("Sentimentalize") %>
+<%= form_tag({}, method: 'get', :id => 'submit_container') do %>
+  <%= label_tag(:tweet, 'Symbol:') %>
+  <%= text_field_tag(:symbol) %>
+  <%= submit_tag('Sentimentalize', class: 'btn btn-primary') %>
 <% end %>
 
-<% if @result %>
-  <pre><%= @result.to_json %></pre>
+<script language="javascript" type="text/javascript">
+$("form").submit(function() {
+if ($('#loading_image').length == 0) {
+  $('#submit_container').after('<i class="fa fa-spinner fa-pulse fa-5x centered" style="display: none;" id="loading_image">')
+}
+  $('#loading_image').show(); // show the animated image
+  $(':submit',this).attr('disabled','disabled'); // disable double submits
+  return true; // allow regular form submission
+});
+</script>
+
+<% if @results %>
+  <h4>Rating for <%= @symbol %> <small>(-100 to 100)</small></h4>
+  <p><span style='color:<% if @symbol_rating < 0 %> red <% else %> green <% end %>;'><%= @symbol_rating %></span><br><small>Based on data from <%= @results.length %> tweets</small></p>
+  <hr>
+  <br>
+  <% @results.each do |res| %>
+    <pre><%= res.to_json %></pre>
+  <% end %>
 <% end %>
+
+<script>
+var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    cb(matches);
+  };
+};
+var symbols = <%= @tickers.html_safe %>;
+
+$('#symbol').typeahead({
+    hint: true,
+    highlight: true,
+    minLength: 1
+  },
+  {
+     source: substringMatcher(symbols)
+  }
+);
+</script>
