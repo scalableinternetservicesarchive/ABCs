@@ -24,7 +24,6 @@ class SentimentController < ApplicationController
       elsif res.sentiment == ':('
         total_points -= res.overall_probability
       end
-      puts res.to_json
       @results << res
     end
     @symbol_rating = total_points / @results.length * 100
