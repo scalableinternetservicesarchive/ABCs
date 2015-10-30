@@ -22,7 +22,7 @@ User
 * password
 * favorited stocks (foreighn key to Company::Ticker, has_many)
 
-Tweet (current)
+[NO]Tweet (current)
 =====
 * content (string)
 * author (string) [MAYBE?]
@@ -32,3 +32,10 @@ Indices
 =======
 * All instances of Company::Ticker
 * PricePoint::Datetime
+
+Results (current)
+=================
+* Company::Ticker (foreign key, has_one)
+* score (-100 -> 100, floating point)
+* tweet_text (text of tweet with similar score)
+* tweet_author (author of tweet if available)
