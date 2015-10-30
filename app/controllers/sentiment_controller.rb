@@ -4,8 +4,9 @@ require 'analyzer'
 class SentimentController < ApplicationController
   # rubocop:disable AbcSize, MethodLength
   def check
-    analyzer = Analyzer.new
+    @tickers = ticker_json(Company.all)
     return unless params['symbol']
+    analyzer = Analyzer.new
     @symbol = params['symbol'].upcase
     # rubocop:disable GlobalVars
     @tweets = $twitter.search('$' + @symbol + ' -rt',
@@ -30,6 +31,11 @@ class SentimentController < ApplicationController
   end
 
   private
+
+  def ticker_json(companies)
+    list = companies.map(&:symbol)
+    list.to_json
+  end
 
   def sent_params
     params.require(:tweet)
