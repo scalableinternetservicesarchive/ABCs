@@ -1,19 +1,8 @@
-<%= form_tag({}, method: 'get', :id => 'submit_container') do %>
-  <%= label_tag(:tweet, 'Symbol:') %>
+<%= form_tag({}, method: 'get', id: 'submit_container') do %>
+  <%= label_tag(:tweet, 'Symbol:', class: 'symbol') %>
   <%= text_field_tag(:symbol) %>
   <%= submit_tag('Sentimentalize', class: 'btn btn-primary') %>
 <% end %>
-
-<script language="javascript" type="text/javascript">
-$("form").submit(function() {
-if ($('#loading_image').length == 0) {
-  $('#submit_container').after('<i class="fa fa-spinner fa-pulse fa-5x centered" style="display: none;" id="loading_image">')
-}
-  $('#loading_image').show(); // show the animated image
-  $(':submit',this).attr('disabled','disabled'); // disable double submits
-  return true; // allow regular form submission
-});
-</script>
 
 <% if @results %>
   <h4>Rating for <%= @symbol %> <small>(-100 to 100)</small></h4>
@@ -58,4 +47,13 @@ $('#symbol').typeahead({
      source: substringMatcher(symbols)
   }
 );
+
+$('form').submit(function() {
+  if ($('#loading_image').length == 0) {
+    $('#submit_container').after('<i class="fa fa-spinner fa-pulse fa-5x centered" style="display: none;" id="loading_image">')
+  }
+    $('#loading_image').show(); // show the animated image
+    $(':submit',this).attr('disabled','disabled'); // disable double submits
+    return true; // allow regular form submission
+});
 </script>
