@@ -1,9 +1,15 @@
-<%= form_tag do %>
-  <%= label_tag(:tweet, "Text:") %>
-  <%= text_field_tag(:tweet) %>
-  <%= submit_tag("Sentimentalize") %>
+<%= form_tag({}, method: 'get') do %>
+  <%= label_tag(:tweet, 'Symbol:') %>
+  <%= text_field_tag(:symbol) %>
+  <%= submit_tag('Sentimentalize') %>
 <% end %>
 
-<% if @result %>
-  <pre><%= @result.to_json %></pre>
+<% if @results %>
+  <h4>Rating for <%= @symbol %> <small>(-100 to 100)</small></h4>
+  <p><span style='color:<% if @symbol_rating < 0 %> red <% else %> green <% end %>;'><%= @symbol_rating %></span><br><small>Based on data from <%= @results.length %> tweets</small></p>
+  <hr>
+  <br>
+  <% @results.each do |res| %>
+    <pre><%= res.to_json %></pre>
+  <% end %>
 <% end %>
