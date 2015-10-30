@@ -6,16 +6,28 @@ body.sent {
   background-image: none;
 }
 
+.symbol {
+  font-size: 16px;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .tt-input,
 .tt-hint {
   width: 396px;
-  height: 30px;
+  height: 34px;
   padding: 8px 12px;
-  font-size: 24px;
+  font-size: 16px;
   line-height: 30px;
   border: 2px solid #ccc;
-  border-radius: 8px;
+  border-radius: 2px;
   outline: none;
+  vertical-align: middle !important;
 }
 
 .tt-input {
@@ -27,26 +39,24 @@ body.sent {
 }
 
 .tt-menu {
-  width: 422px;
-  margin-top: 12px;
+  width: 396px;
   padding: 8px 0;
   background-color: #fff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  border-radius: 0 0 5px 5px;
   box-shadow: 0 5px 10px rgba(0,0,0,.2);
 }
 
 .tt-suggestion {
   padding: 3px 20px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 24px;
 }
 
-.tt-suggestion.tt-is-cursor {
+.tt-suggestion:hover,.tt-suggestion.tt-cursor {
   color: #fff;
   background-color: #0097cf;
-
 }
 
 .tt-suggestion p {
