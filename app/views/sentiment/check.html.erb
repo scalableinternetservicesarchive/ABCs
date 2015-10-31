@@ -14,12 +14,13 @@ if ($('#loading_image').length == 0) {
   return true; // allow regular form submission
 });
 </script>
-
-<% if @results %>
+<% if @symbol && @symbol_rating && @num_tweets %>
   <h4>Rating for <%= @symbol %> <small>(-100 to 100)</small></h4>
-  <p><span style='color:<% if @symbol_rating < 0 %> red <% else %> green <% end %>;'><%= @symbol_rating %></span><br><small>Based on data from <%= @results.length %> tweets</small></p>
+  <p><span style='color:<% if @symbol_rating < 0 %> red <% else %> green <% end %>;'><%= number_with_precision(@symbol_rating, precision: 3) %></span><br><small>Based on data from <%= @num_tweets %> tweets</small></p>
   <hr>
   <br>
+<% end %>
+<% if @results %>
   <% @results.each do |res| %>
     <pre><%= res.to_json %></pre>
   <% end %>
