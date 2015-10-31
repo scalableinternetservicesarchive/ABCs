@@ -2,7 +2,8 @@ require 'analyzer'
 
 # Test controller for demoing the sentiment analysis engine
 class SentimentController < ApplicationController
-  # rubocop:disable AbcSize, MethodLength, CyclomaticComplexity
+  # rubocop:disable AbcSize, MethodLength
+  # rubocop:disable CyclomaticComplexity, PerceivedComplexity
   def check
     # Get list of tickers for autocomplete
     @tickers = ticker_json(Company.all)
@@ -56,6 +57,7 @@ class SentimentController < ApplicationController
     smallest_diff = 10 # on a scale of -1 to 1
     closest = nil
     @tweets.each do |tweet|
+      next if tweet_map[tweet].nil?
       diff = (rating - tweet_map[tweet]).abs
       if diff < smallest_diff
         smallest_diff = diff
