@@ -33,7 +33,6 @@ class FavoriteController < ApplicationController
     end
   end
 
-
   def remove_favorite
     # update active column of association to false
     @company_id = params['company_id']
@@ -44,7 +43,6 @@ class FavoriteController < ApplicationController
       format.json {render :json => {action: 'remove', company_id: @company_id}}
     end
   end
-
 
   def ticker_json(companies)
     list = companies.map(&:symbol)

@@ -59,6 +59,16 @@ ActiveRecord::Schema.define(version: 20151104013300) do
 
   add_index "sentiment_caches", ["company_id"], name: "index_sentiment_caches_on_company_id", unique: true, using: :btree
 
+  create_table "favorite_companies", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.integer  "company_id", limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "favorite_companies", ["company_id"], name: "index_favorite_companies_on_company_id", using: :btree
+  add_index "favorite_companies", ["user_id"], name: "index_favorite_companies_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
     t.string   "encrypted_password",     limit: 255, default: "", null: false
