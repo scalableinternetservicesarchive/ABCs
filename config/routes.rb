@@ -12,6 +12,9 @@ Rails.application.routes.draw do
 
   get 'sentiment' => 'sentiment#check'
 
+  get 'favorite' => 'favorite#favorite'
+
+  post 'create_favorite/:user_id/:company_id' => 'favorite#create_favorite', as: :create_favorite
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

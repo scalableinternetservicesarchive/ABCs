@@ -8,4 +8,5 @@ class MarketChirpController < ApplicationController
       @tweets = $twitter.search(@query + ' -rt', result_type: 'mixed', count: 20).take(num)
     end
   end
+
 end

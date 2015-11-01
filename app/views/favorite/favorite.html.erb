@@ -1,0 +1,31 @@
+<div class="info-section">
+  <% if user_signed_in? %>
+    Current User ID: <%= current_user.id %>
+  <% end %>
+
+  <%= form_tag({}, method: 'get', id: 'submit_container') do %>
+    <%= label_tag(:tweet, 'Symbol:', class: 'symbol') %>
+    <%= text_field_tag(:symbol) %>
+    <%= submit_tag('Search', class: 'btn btn-primary') %>
+  <% end %>
+
+  <% if @results %>
+    <h4>Search results for <%= @symbol %></h4>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Symbol</th>
+        <th>Name</th>
+      </tr>
+
+      <% @results.each do |res| %>
+        <tr>
+          <td><%= res.id %></td>
+          <td><%= res.symbol %></td>
+          <td><%= res.name %></td>
+          <td><%= link_to "Favorite", create_favorite_path(current_user.id, res.id), method: :post %></td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+</div>
