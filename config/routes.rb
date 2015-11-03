@@ -14,7 +14,10 @@ Rails.application.routes.draw do
 
   get 'favorite' => 'favorite#favorite'
 
-  post 'create_favorite/:user_id/:company_id' => 'favorite#create_favorite', as: :create_favorite
+  post 'favorite/create/:company_id' => 'favorite#create_favorite', as: :create_favorite
+
+  patch 'favorite/remove/:company_id' => 'favorite#remove_favorite', as: :remove_favorite
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

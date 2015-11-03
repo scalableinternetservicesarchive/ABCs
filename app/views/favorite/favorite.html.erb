@@ -1,6 +1,25 @@
 <div class="info-section">
   <% if user_signed_in? %>
-    Current User ID: <%= current_user.id %>
+    Current User ID: <%= current_user.id %> <br>
+    <% if @user_companies %>
+    <h4>Your Favorite Companies</h4>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Symbol</th>
+        <th>Name</th>
+      </tr>
+
+      <% @user_companies.each do |res| %>
+        <tr>
+          <td><%= res.id %></td>
+          <td><%= res.symbol %></td>
+          <td><%= res.name %></td>
+          <td><%= link_to "Remove", remove_favorite_path(res.id), method: :patch%></td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
   <% end %>
 
   <%= form_tag({}, method: 'get', id: 'submit_container') do %>
@@ -23,7 +42,7 @@
           <td><%= res.id %></td>
           <td><%= res.symbol %></td>
           <td><%= res.name %></td>
-          <td><%= link_to "Favorite", create_favorite_path(current_user.id, res.id), method: :post %></td>
+          <td><%= link_to "Favorite", create_favorite_path(res.id), method: :post%></td>
         </tr>
       <% end %>
     </table>
