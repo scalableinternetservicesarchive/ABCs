@@ -1,4 +1,4 @@
-require 'sentimentalizer'
+require 'sentimentalizer.rb'
 
 # Setup the sentimentalizer library control access to it
 class Analyzer
