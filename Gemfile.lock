@@ -154,7 +154,6 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    sentimentalizer (0.2.2)
     simple_oauth (0.3.1)
     spring (1.4.0)
     sprockets (3.4.0)
@@ -211,7 +210,6 @@ DEPENDENCIES
   rails (= 4.2.4)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
-  sentimentalizer
   spring
   turbolinks
   twitter
