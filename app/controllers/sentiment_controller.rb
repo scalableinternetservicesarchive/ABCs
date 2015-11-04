@@ -82,7 +82,7 @@ class SentimentController < ApplicationController
     cached = SentimentCache.find_by(company_id: company.id)
 
     # Only keep sentiments cached for a day
-    if cached.created_at < Time.zone.now.beginning_of_day
+    if cached.created_at < Time.zone.now - 1.day
       cached.destroy
       cached = nil
     end
