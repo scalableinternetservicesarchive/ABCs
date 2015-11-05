@@ -5,8 +5,13 @@ class SentimentAnalyzer
   # Returns {symbol_rating: number, num_tweets: number, results: [json objs]}
   # Looks up symbol in cache. If in cache, return value if not expired.
   # Otherwise, fetch the tweets and process them.
+  # rubocop:disable MethodLength
   def self.get_results(symbol)
     symbol.upcase!
+    if Company.find_by(symbol: symbol).nil?
+      fail(ArgumentError,
+           "#{symbol} is an invalid symbol! Not found in company database")
+    end
     cached_result = get_cached_sentiment(symbol)
     return fetch_sentiment(symbol) unless cached_result
     { symbol_rating: cached_result.score,
@@ -15,6 +20,7 @@ class SentimentAnalyzer
                   author: cached_result.tweet_author,
                   text: cached_result.tweet_text }] }
   end
+  # rubocop:enable MethodLength
 
   class << self
     private
