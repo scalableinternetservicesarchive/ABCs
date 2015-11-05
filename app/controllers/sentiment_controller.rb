@@ -1,32 +1,21 @@
-require 'analyzer'
+require 'sentiment_analyzer'
 
 # Test controller for demoing the sentiment analysis engine
 class SentimentController < ApplicationController
-  # rubocop:disable AbcSize, MethodLength
   def check
+    # Get list of tickers for autocomplete
     @tickers = ticker_json(Company.all)
     return unless params['symbol']
-    analyzer = Analyzer.new
-    @symbol = params['symbol'].upcase
-    # rubocop:disable GlobalVars
-    @tweets = $twitter.search('$' + @symbol + ' -rt',
-                              result_type: 'mixed',
-                              count: 20).take(100)
-    # rubocop:enable GlobalVars
-    @results = []
-    total_points = 0
-    @tweets.each do |tweet|
-      res = analyzer.process(tweet.text)
-      # Skip adding neutral
-      next unless res
-      if res.sentiment == ':)'
-        total_points += res.overall_probability
-      elsif res.sentiment == ':('
-        total_points -= res.overall_probability
-      end
-      @results << res
-    end
-    @symbol_rating = total_points / @results.length * 100
+
+    # Get cached symbol if possible
+    @symbol = params['symbol']
+    @sentiments = SentimentAnalyzer.get_results(@symbol)
+    @symbol_rating = @sentiments[:symbol_rating]
+    @num_tweets = @sentiments[:num_tweets]
+    @results = @sentiments[:results]
+  rescue => e
+    puts e.message
+    render file: 'public/404.html', status: :not_found, layout: false
   end
 
   private
