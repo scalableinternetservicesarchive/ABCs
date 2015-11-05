@@ -4,7 +4,9 @@ require 'test_helper'
 class AnalyzerTest < ActiveSupport::TestCase
   test 'Run analyzer on small string' do
     a = Analyzer.new
-    assert a.process('hello world').to_json.eql? '{"text":"hello world",'\
-      '"probability":0.7627410869620818,"sentiment":":)"}'
+    s = a.process('hello world')
+    # hello world should have positive sentiment.
+    # probability differs slightly due to new training model
+    assert_equal(s.sentiment, ':)')
   end
 end
