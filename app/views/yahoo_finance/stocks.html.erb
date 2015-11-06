@@ -1,0 +1,60 @@
+<h4>Enter stock ticker from NASDAQ:</h4>
+
+<%= form_tag({}, method: 'get', id: 'submit_container') do %>
+  <%= label_tag(:symbol, 'Ticker:', class: 'symbol') %>
+  <%= text_field_tag(:symbol) %>
+  <%= submit_tag('Get stock data', class: 'btn btn-primary', name: nil) %>
+<% end %>
+<br>
+
+<% if @quotes && @hist %>
+  <pre>
+    <% @quotes.each do |symbol, qt| %>
+      <%= "\n#{qt.name}\n#{qt.date}\n#{qt.time}\n\nLast Trade: #{qt.lastTrade}\nChange: #{qt.change}\nChange Points: #{qt.changePoints}\nChange Percent: #{qt.changePercent}%\nPrevious Close: #{qt.previousClose}\nOpen: #{qt.open}\nDay High: #{qt.dayHigh}\nDay Low: #{qt.dayLow}\nVolume: #{qt.volume}\nDay Range: #{qt.dayRange}\nAverage Daily Volume: #{qt.averageDailyVolume}\nBid: #{qt.bid}\nAsk: #{qt.ask}\n"%>
+    <% end %>
+  </pre>
+<% end %>
+
+<script>
+var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    cb(matches);
+  };
+};
+var symbols = <%= @tickers.html_safe %>;
+
+$('#symbol').typeahead({
+    hint: true,
+    highlight: true,
+    minLength: 1
+  },
+  {
+     source: substringMatcher(symbols)
+  }
+);
+
+$('form').submit(function() {
+  if ($('#loading_image').length == 0) {
+    $('#submit_container').after('<i class="fa fa-spinner fa-pulse fa-5x centered" style="display: none;" id="loading_image">')
+  }
+    $('#loading_image').show(); // show the animated image
+    $(':submit',this).attr('disabled','disabled'); // disable double submits
+    return true; // allow regular form submission
+});
+</script>

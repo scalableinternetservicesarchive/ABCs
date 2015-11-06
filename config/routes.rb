@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get 'api/symbols/json' => 'api#symjson'
 
   get 'sentiment' => 'sentiment#check'
+  get 'stocks' => 'yahoo_finance#stocks'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
