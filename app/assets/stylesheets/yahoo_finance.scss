@@ -1,3 +1,64 @@
 // Place all the styles related to the yahoo_finance controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+body.sent {
+  background-image: none;
+}
+
+.symbol {
+  font-size: 16px;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.tt-input,
+.tt-hint {
+  width: 396px;
+  height: 34px;
+  padding: 8px 12px;
+  font-size: 16px;
+  line-height: 30px;
+  border: 2px solid #ccc;
+  border-radius: 2px;
+  outline: none;
+  vertical-align: middle !important;
+}
+
+.tt-input {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999;
+}
+
+.tt-menu {
+  width: 396px;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.tt-suggestion:hover,.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
