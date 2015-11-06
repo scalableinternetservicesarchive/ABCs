@@ -12,7 +12,6 @@ Rails.application.routes.draw do
 
   get 'sentiment' => 'sentiment#check'
   get 'stocks' => 'yahoo_finance#stocks'
-  post 'stocks' => 'yahoo_finance#get_data'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

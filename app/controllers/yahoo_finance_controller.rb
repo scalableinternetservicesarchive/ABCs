@@ -22,6 +22,6 @@ class YahooFinanceController < ApplicationController
   end
 
   def finance_params
-    params.require(:stock)
+    params.require(:symbol)
   end
 end
