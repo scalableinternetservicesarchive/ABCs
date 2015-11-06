@@ -10,7 +10,7 @@
 <% if @quotes && @hist %>
   <pre>
     <% @quotes.each do |symbol, qt| %>
-      <%= "\n#{qt.name}\n#{qt.date}\n#{qt.time}\n\nLast Trade: #{qt.lastTrade}\nChange: #{qt.change}\nChange Points: #{qt.changePoints}\nChange Percent: #{qt.changePercent}%\nPrevious Close: #{qt.previousClose}\nOpen: #{qt.open}\nDay High: #{qt.dayHigh}\nDay Low: #{qt.dayLow}\nVolume#{qt.volume}\nDay Range: #{qt.dayRange}\nAverage Daily Volume: #{qt.averageDailyVolume}\nBid: #{qt.bid}\nAsk: #{qt.ask}\n"%>
+      <%= "\n#{qt.name}\n#{qt.date}\n#{qt.time}\n\nLast Trade: #{qt.lastTrade}\nChange: #{qt.change}\nChange Points: #{qt.changePoints}\nChange Percent: #{qt.changePercent}%\nPrevious Close: #{qt.previousClose}\nOpen: #{qt.open}\nDay High: #{qt.dayHigh}\nDay Low: #{qt.dayLow}\nVolume: #{qt.volume}\nDay Range: #{qt.dayRange}\nAverage Daily Volume: #{qt.averageDailyVolume}\nBid: #{qt.bid}\nAsk: #{qt.ask}\n"%>
     <% end %>
   </pre>
 <% end %>
