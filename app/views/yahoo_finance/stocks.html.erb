@@ -1,7 +1,7 @@
 <h4>Enter stock ticker from NASDAQ:</h4>
 
 <%= form_tag({}, method: 'get', id: 'submit_container') do %>
-  <%= label_tag(:symbol, "Ticker:", class: 'symbol') %>
+  <%= label_tag(:symbol, 'Ticker:', class: 'symbol') %>
   <%= text_field_tag(:symbol) %>
   <%= submit_tag('Get stock data', class: 'btn btn-primary', name: nil) %>
 <% end %>
