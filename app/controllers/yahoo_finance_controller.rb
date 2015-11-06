@@ -8,8 +8,8 @@ class YahooFinanceController < ApplicationController
 
     # get cached symbol if possible
     @symbol = params['symbol']
-    @quotes = Finance.get_quotes(@symbol, false)[:quotes]
-    @hist = Finance.get_quotes(@symbol, true)[:hist]
+    @quotes = Finance.get_quotes(@symbol, false)
+    @hist = Finance.get_quotes(@symbol, true)
   rescue => e
     puts e.message
     render file: 'public/404.html', status: :not_found, layout: false
