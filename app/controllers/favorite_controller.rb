@@ -21,26 +21,24 @@ class FavoriteController < ApplicationController
 
     c = Company.find(@company_id)
 
+    # if this is a new connection create it otherwise set the old one as active
     if !current_user.companys.exists?(@company_id)
       current_user.companys << c
-      @message = 'creating new entry'
     else
       current_user.favorite_companys.find_by_company_id(@company_id).update(:active => true)
-      @message = 'already exists, enabling favorite again'
     end
 
     respond_to do |format|
       format.json {render :json => {action: 'create', company: c}}
     end
-    # respond_with(@company_id)
   end
 
 
   def remove_favorite
+    # update active column of association to false
     @company_id = params['company_id']
     current_user.favorite_companys.find_by_company_id(@company_id).update(:active => false)
     @message = 'Removed from favorites'
-    # respond_with(@company_id)
 
     respond_to do |format|
       format.json {render :json => {action: 'remove', company_id: @company_id}}
