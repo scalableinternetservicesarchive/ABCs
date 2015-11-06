@@ -1,50 +1,147 @@
-<div class="info-section">
-  <% if user_signed_in? %>
-    Current User ID: <%= current_user.id %> <br>
-    <% if @user_companies %>
-    <h4>Your Favorite Companies</h4>
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>Symbol</th>
-        <th>Name</th>
+<% content_for :javascript_includes do %>
+  <%= javascript_include_tag "forms.js" %>
+<% end %>
+
+<% if user_signed_in? %>
+  Current User ID: <%= current_user.id %> <br>
+  <% if @user_companies %>
+  <h4>Your Favorite Companies</h4>
+  <table class="table table-hover" id="current_favorites">
+    <tr>
+      <th>ID</th>
+      <th>Symbol</th>
+      <th>Name</th>
+      <th></th>
+    </tr>
+
+    <% @user_companies.each do |res| %>
+      <tr class="fav_company_<%= res.id %>">
+        <td><%= res.id %></td>
+        <td><%= res.symbol %></td>
+        <td><%= res.name %></td>
+        <td>
+          <%= button_to remove_favorite_path(res.id), method: :patch, remote: true, class: "btn btn-default" do%>
+            <i class="glyphicon glyphicon-remove"></i>
+          <% end %>
+        </td>
       </tr>
+    <% end %>
+  </table>
+<% end %>
+<% end %>
 
-      <% @user_companies.each do |res| %>
-        <tr>
-          <td><%= res.id %></td>
-          <td><%= res.symbol %></td>
-          <td><%= res.name %></td>
-          <td><%= link_to "Remove", remove_favorite_path(res.id), method: :patch%></td>
-        </tr>
-      <% end %>
-    </table>
-  <% end %>
-  <% end %>
+<%= form_tag({}, method: 'get', id: 'submit_container') do %>
+  <%= label_tag(:tweet, 'Symbol:', class: 'symbol') %>
+  <%= text_field_tag(:symbol) %>
+  <%= submit_tag('Search', class: 'btn btn-primary') %>
+<% end %>
 
-  <%= form_tag({}, method: 'get', id: 'submit_container') do %>
-    <%= label_tag(:tweet, 'Symbol:', class: 'symbol') %>
-    <%= text_field_tag(:symbol) %>
-    <%= submit_tag('Search', class: 'btn btn-primary') %>
-  <% end %>
+<% if @results %>
+  <h4>Search results for <%= @symbol %></h4>
+  <table class="table table-hover" id="search_results">
+    <tr>
+      <th>ID</th>
+      <th>Symbol</th>
+      <th>Name</th>
+      <th></th>
+    </tr>
 
-  <% if @results %>
-    <h4>Search results for <%= @symbol %></h4>
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>Symbol</th>
-        <th>Name</th>
+    <% @results.each do |res| %>
+      <tr data-link="<%= sentiment_path() %>">
+        <td><%= res.id %></td>
+        <td><%= res.symbol %></td>
+        <td><%= res.name %></td>
+        <td>
+          <% if @user_companies.include?(res) %>
+            <%= button_to create_favorite_path(res.id), remote: true, class: "favorite-btn-#{res.id} btn btn-default disabled" do%>
+              <i class="glyphicon glyphicon-star-empty"></i>
+            <% end %>
+          <% else %>
+            <%= button_to create_favorite_path(res.id), remote: true, class: "favorite-btn-#{res.id} btn btn-default" do%>
+              <i class="glyphicon glyphicon-star-empty"></i>
+            <% end %>
+          <% end %>
+        </td>
       </tr>
+    <% end %>
+  </table>
+<% end %>
 
-      <% @results.each do |res| %>
-        <tr>
-          <td><%= res.id %></td>
-          <td><%= res.symbol %></td>
-          <td><%= res.name %></td>
-          <td><%= link_to "Favorite", create_favorite_path(res.id), method: :post%></td>
-        </tr>
-      <% end %>
-    </table>
-  <% end %>
-</div>
+<script>
+
+
+function addCompanyRow(company) {
+  var row_class = 'fav_company_'+company.id;
+  $('#current_favorites tr:last').after(
+    '<tr class=\"'+ row_class+'\"><td>'+company.id+'</td><td>'+company.symbol+'</td><td>'+company.name+'</td><td>'
+     +'<%= button_to remove_favorite_path('+company.id+'), method: :patch, remote: true, class: "btn btn-default" do%> <i class="glyphicon glyphicon-remove"></i> <% end %>'
+    +'</td></tr>'
+    ).animate("slow");
+}
+
+function removeCompanyRow(company_id) {
+  var company_row = '.fav_company_'+company_id;
+  $(company_row).fadeOut(300, function(){ $(this).remove();});
+  // if company is in results, enable the favorite button
+  $('.favorite-btn-'+company_id).removeClass('disabled');
+}
+
+$(document).on('ajax:success', 'form', function(event, data, status, xhr) {
+  console.log("Hello!");
+  console.log(event);
+  console.log(data);
+  console.log(status);
+
+  if(data.action == "create") {
+    // var table = document.getElementById("myTable");
+    addCompanyRow(data.company)
+  }
+  else if(data.action == "remove") {
+    removeCompanyRow(data.company_id)
+  }
+  $('#loading_image').hide();
+});
+
+
+var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    cb(matches);
+  };
+};
+var symbols = <%= @tickers.html_safe %>;
+
+$('#symbol').typeahead({
+    hint: true,
+    highlight: true,
+    minLength: 1
+  },
+  {
+     source: substringMatcher(symbols)
+  }
+);
+
+$('form').submit(function() {
+  if ($('#loading_image').length == 0) {
+    $('#submit_container').after('<i class="fa fa-spinner fa-pulse fa-5x centered" style="display: none;" id="loading_image">')
+  }
+    $('#loading_image').show(); // show the animated image
+    $(':submit',this).attr('disabled','disabled'); // disable double submits
+    return true; // allow regular form submission
+});
+</script>
