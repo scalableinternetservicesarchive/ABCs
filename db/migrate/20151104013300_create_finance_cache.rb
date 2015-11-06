@@ -1,6 +1,8 @@
 class CreateFinanceCache < ActiveRecord::Migration
   def change
     create_table :finance_caches do |t|
+      t.timestamp :hist_when
+      t.timestamp :curr_when
       t.text :hist_data
       t.text :curr_data
       t.integer :status, default: 0

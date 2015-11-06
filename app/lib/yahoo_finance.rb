@@ -13,7 +13,7 @@ class Finance
            "#{symbol} is an invalid symbol! Not found in company database")
     end
 
-#    cached_result = get_cached_data(symbol, hist)
+    #cached_result = get_cached_data(symbol, hist)
     if hist 
       return fetch_finance_hist(symbol)# unless cached_result
     else
@@ -22,7 +22,6 @@ class Finance
 
     { quotes: cached_result.curr_data,
       hist: cached_result.hist_data }
-      #status?
   end
 
   class << self
@@ -40,24 +39,9 @@ class Finance
       #   [5] - Volume
       #   [6] - Adjusted Close
 
-      # Below are 2 different methods to get the historical data
-      
-      # The first downloads up to 100 years worth of quotes as raw array
-      # If using raw array, can use row.join on each obj to display
       days_past = 36500
       hist = YahooFinance::get_historical_quotes_days(symbol, days_past)
       histJSON = hist.map { |e| {:id => e}}.to_json
-
-      # The second way
-      # Downloading as YahooFinance::HistoricalQuote object
-      # If using this method, change the following in stocks.html.erb
-      #   for each object, hq: hq.symbol, hq.date, hq.open, hq.high, hq.low
-      #                        hq.close, hq.volume, hq.adjClose
-      #
-      # ****to_json has some weird output when using this method*****
-      #
-      #@hist = YahooFinance::get_HistoricalQuotes_days(ticker, days_past)
-      #@histJSON = @hist.map { |e| {:id => e}}.to_json
 
       # Caching the historical data
       #cache(histJSON, symbol, true)
@@ -79,21 +63,20 @@ class Finance
     # Stores the results in the DB
     def cache(data, symbol, historical)
       # :status is an enum which identifies historical (0) or current(1) data
-      if (historical)
+      data_type = historical ? :hist_data : :curr_data
+      time_type = historical ? :hist_when : :curr_when
+      #if FinanceCache.exists?(company_id: Company.find_by(symbol: symbol).id)
+      #  update_cache = 
+      #    FinanceCache.where(company_id: Company.find_by(symbol: symbol).id)
+      #  update_cache = update_attributes(data_type => data,
+      #                                   time_type => Time.now)
+      #else
         yhoo_cache = 
-          FinanceCache.new(hist_data: data,
-                           status: 0,
-                           company_id: Company.find_by(symbol: symbol).id
-                          )
+          FinanceCache.new(data_type => data,
+                           time_type => Time.now,
+                           company_id: Company.find_by(symbol: symbol).id)
         yhoo_cache.save
-      else 
-        yhoo_cache =
-          FinanceCache.new(curr_data: data,
-                           status: 1,
-                           company_id: Company.find_by(symbol: symbol).id
-                          )
-        yhoo_cache.save
-      end
+      #end
     end
 
     # Checks cache for stored stock data
