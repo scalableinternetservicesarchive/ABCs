@@ -14,9 +14,9 @@ class Finance
     end
 
     if is_hist 
-      fetch_finance_hist(symbol)
+      fetch_finance_hist symbol
     else
-      fetch_finance_curr(symbol)
+      fetch_finance_curr symbol
     end
   end
 
@@ -37,7 +37,7 @@ class Finance
 
       days_past = 36500
       hist = YahooFinance::get_historical_quotes_days(symbol, days_past)
-      histJSON = hist.map { |e| {:id => e}}.to_json
+      histJSON = hist.map { |e| {id: e}}.to_json
 
       { hist: histJSON }
     end
@@ -45,7 +45,7 @@ class Finance
     # Download and cache the current quote for target stock
     def fetch_finance_curr(symbol)
       # Get new data
-      quote = YahooFinance::get_standard_quotes(symbol)
+      quote = YahooFinance::get_standard_quotes symbol
 
       { quotes: quote }
     end
