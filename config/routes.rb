@@ -13,6 +13,12 @@ Rails.application.routes.draw do
   get 'sentiment' => 'sentiment#check'
   get 'stocks' => 'yahoo_finance#stocks'
 
+  get 'favorite' => 'favorite#favorite'
+
+  post 'favorite/create/:company_id' => 'favorite#create_favorite', as: :create_favorite
+
+  patch 'favorite/remove/:company_id' => 'favorite#remove_favorite', as: :remove_favorite
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
