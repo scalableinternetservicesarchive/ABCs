@@ -15,3 +15,4 @@
 //= require turbolinks
 //= require typeahead.bundle.min
 //= require_tree .
+//= require d3

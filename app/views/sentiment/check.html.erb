@@ -4,9 +4,12 @@
   <%= submit_tag('Sentimentalize', class: 'btn btn-primary') %>
 <% end %>
 
+<%= javascript_include_tag 'liquidFillGauge' %>
+
 <% if @symbol && @symbol_rating && @num_tweets %>
   <h4>Rating for <%= @symbol %> <small>(-100 to 100)</small></h4>
   <p><span style='color:<% if @symbol_rating < 0 %> red <% else %> green <% end %>;'><%= number_with_precision(@symbol_rating, precision: 3) %></span><br><small>Based on data from <%= @num_tweets %> tweets</small></p>
+  <svg id="fillgauge1" width="97%" height="250"></svg>
   <hr>
   <br>
 <% end %>
@@ -17,6 +20,8 @@
 <% end %>
 
 <script>
+loadLiquidFillGauge("fillgauge1", <%= @symbol_rating =%>);
+
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
     var matches, substringRegex;
