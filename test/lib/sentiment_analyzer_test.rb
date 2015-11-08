@@ -2,6 +2,11 @@ require 'sentiment_analyzer.rb'
 require 'test_helper'
 
 class SentimentAnalyzerTest < ActiveSupport::TestCase
+  def setup
+    # Empty the cache
+    SentimentCache.delete_all
+  end
+
   test 'Check caching and twitter feed' do
     # Cache miss
     start_miss = Time.now

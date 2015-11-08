@@ -57,6 +57,9 @@ class SentimentAnalyzer
                            company_id: Company.find_by(symbol: symbol).id
                           )
       sent_cache.save
+    rescue ActiveRecord::RecordNotUnique => e
+      # Catch race condition where multiple users try to cache the same symbol
+      puts e.message
     end
 
     # Analyze tweets
