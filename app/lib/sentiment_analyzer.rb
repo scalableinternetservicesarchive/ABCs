@@ -106,14 +106,13 @@ class SentimentAnalyzer
     # Check cache for stored sentiment values
     def get_cached_sentiment(symbol)
       company = Company.find_by(symbol: symbol)
-      cached = SentimentCache.find_by(company_id: company.id)
+      # Get the most recent cache value
+      cached = SentimentCache.where(company_id: company.id)
+               .order('created_at DESC')
+               .first
 
-      # Only keep sentiments cached for a day
-      if cached.created_at < Time.zone.now - 1.day
-        cached.destroy
-        cached = nil
-      end
-
+      # Only count sentiments from the past day
+      cached = nil if cached.created_at < Time.zone.now - 1.day
       return cached
     rescue
       return nil
