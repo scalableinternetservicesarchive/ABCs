@@ -16,9 +16,13 @@ class SentimentAnalyzerTest < ActiveSupport::TestCase
     time_hit = end_hit - start_hit
 
     # Compare results
-    assert_equal(sent_hit[:symbol_rating].to_f.round(3),
-                 sent_miss[:symbol_rating].to_f.round(3),
-                 'Symbol ratings differ between fresh and cached')
+    # Ensure the cached rating is basically the same as the fetched rating,
+    # allowing a change of less than 1%
+    rating_diff = sent_hit[:symbol_rating].to_f.round(3) -
+                  sent_miss[:symbol_rating].to_f.round(3)
+    diff_percentage = rating_diff / sent_miss[:symbol_rating].to_f.round(3)
+    assert(diff_percentage < 0.01,
+           'Symbol ratings differ between fresh and cached')
     assert_equal(sent_hit[:num_tweets], sent_miss[:num_tweets],
                  'Number of tweets differ between fresh and cached')
     assert(time_hit < time_miss, 'Cache hit took as long as cache miss')
