@@ -77,7 +77,7 @@ class Finance
       cached = FinanceCache.find_by(company_id: company.id, category: type)
 
       # Only keep historical data for a day, and current for 15 minutes
-      exp_period = is_hist ? 1.day : 1.day
+      exp_period = is_hist ? 1.day : 15.min
       if cached.created_at < Time.zone.now - exp_period
         cached.destroy
         cached = nil
