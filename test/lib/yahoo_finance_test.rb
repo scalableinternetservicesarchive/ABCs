@@ -2,16 +2,21 @@ require 'yahoo_finance.rb'
 require 'test_helper'
 
 class YahooFinanceTest < ActiveSupport::TestCase
+  def setup
+    # Empty the cache
+    FinanceCache.delete_all
+  end
+
   test 'Check caching stock data' do
     # Cache miss
     start_miss = Time.now
-    finance_miss = Finance.get_quotes('AAPL', 0)
+    finance_miss = Finance.get_quotes('AAPL', false)
     end_miss = Time.now
     time_miss = end_miss - start_miss
 
     # Cache hit
     start_hit = Time.now
-    finance_hit = Finance.get_quotes('AAPL', 0)
+    finance_hit = Finance.get_quotes('AAPL', false)
     end_hit = Time.now
     time_hit = end_hit - start_hit
 
@@ -25,8 +30,10 @@ class YahooFinanceTest < ActiveSupport::TestCase
 
   test 'Check only one record of each type for a company' do
     # Querying for AAPL twice to check for multiple cache attempts
-    Finance.get_quotes('AAPL', 0)
-    Finance.get_quotes('AAPL', 0)
+    Finance.get_quotes('AAPL', false)
+    Finance.get_quotes('AAPL', false)
+    Finance.get_quotes('AAPL', true)
+    Finance.get_quotes('AAPL', true)
     company = Company.find_by(symbol: 'AAPL')
     count_hist_entries = FinanceCache.where(company_id: company.id,
                                             category: 0).count
@@ -41,33 +48,41 @@ class YahooFinanceTest < ActiveSupport::TestCase
   test 'Check cache expiration' do
     # Cache miss
     start_miss = Time.now
-    Finance.get_quotes('AAPL', 0)
+    Finance.get_quotes('AAPL', false)
+    Finance.get_quotes('AAPL', true)
     end_miss = Time.now
     time_miss = end_miss - start_miss
 
     # Cache hit
     start_hit = Time.now
-    Finance.get_quotes('AAPL', 0)
+    Finance.get_quotes('AAPL', false)
+    Finance.get_quotes('AAPL', true)
     end_hit = Time.now
     time_hit = end_hit - start_hit
 
     # Cache expired
     # First, expire the caches for both curr and hist records
     company = Company.find_by(symbol: 'AAPL')
-    cached_hist = FinanceCache.find_by(company_id: company.id, category: 1)
-    cached_curr = FinanceCache.find_by(company_id: company.id, category: 0)
+    cached_hist = FinanceCache.find_by(company_id: company.id, category: 0)
+    cached_curr = FinanceCache.find_by(company_id: company.id, category: 1)
     assert_not_nil(cached_hist, 'Couldn\'t find cached history quotes.')
     assert_not_nil(cached_curr, 'Couldn\'t find cached current quotes.')
+    cached_hist.created_at = cached_hist.created_at - 1.day - 1.hour
+    cached_curr.created_at = cached_curr.created_at - 30.minutes
     cached_hist.save
     cached_curr.save
-    cached_hist.created_at = cached_hist.created_at - 1.day - 1.hour
-    cached_curr.created_at = cached_curr.created_at - 30*60 # 30 minutes
 
     # Second, make sure this request takes longer than a cache hit
+    puts "Cached created_at: #{cached_hist.created_at}"
     start_expired = Time.now
-    Finance.get_quotes('AAPL', 0)
+    Finance.get_quotes('AAPL', true)
     end_expired = Time.now
     time_expired = end_expired - start_expired
+    expired_hist = FinanceCache.find_by(company_id: company.id, category: 0)
+    puts "Expired created_at: #{expired_hist.created_at}"
+    puts "Time expired: #{time_expired}"
+    puts "Time miss: #{time_miss}"
+    puts "Time hit: #{time_hit}"
 
     # Compare results
     assert(time_hit < time_miss, 'Cache doesn\'t take less time')
