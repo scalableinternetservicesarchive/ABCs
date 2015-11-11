@@ -19,11 +19,6 @@
         <td><%= res.id %></td>
         <td><%= res.symbol %></td>
         <td><%= res.name %></td>
-        <td>
-          <%= button_to remove_favorite_path(res.id), method: :patch, remote: true, class: "btn btn-default" do%>
-            <i class="glyphicon glyphicon-remove"></i>
-          <% end %>
-        </td>
       </tr>
     <% end %>
   </table>
@@ -73,9 +68,7 @@
 function addCompanyRow(company) {
   var row_class = 'fav_company_'+company.id;
   $('#current_favorites tr:last').after(
-    '<tr class=\"'+ row_class+'\"><td>'+company.id+'</td><td>'+company.symbol+'</td><td>'+company.name+'</td><td>'
-     +'<%= button_to remove_favorite_path('+company.id+'), method: :patch, remote: true, class: "btn btn-default" do%> <i class="glyphicon glyphicon-remove"></i> <% end %>'
-    +'</td></tr>'
+    '<tr class=\"'+ row_class+'\"><td>'+company.id+'</td><td>'+company.symbol+'</td><td>'+company.name+'</td></tr>'
     ).animate("slow");
 }
 
