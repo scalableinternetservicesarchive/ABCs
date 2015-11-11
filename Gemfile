@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+# d3 for graphing
+gem 'd3-rails'
+
 # hide env files
 gem 'dotenv-rails', :groups => [:development, :test]
 

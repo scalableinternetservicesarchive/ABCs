@@ -4,9 +4,12 @@
   <%= submit_tag('Sentimentalize', class: 'btn btn-primary') %>
 <% end %>
 
+<%= javascript_include_tag 'liquidFillGauge' %>
+
 <% if @symbol && @symbol_rating && @num_tweets %>
   <h4>Rating for <%= @symbol %> <small>(-100 to 100)</small></h4>
-  <p><span style='color:<% if @symbol_rating < 0 %> red <% else %> green <% end %>;'><%= number_with_precision(@symbol_rating, precision: 3) %></span><br><small>Based on data from <%= @num_tweets %> tweets</small></p>
+  <p><small>Based on data from <%= @num_tweets %> tweets</small></p>
+  <svg id="sentimentGraph" width="16%" height="200"></svg>
   <hr>
   <br>
 <% end %>
@@ -17,6 +20,34 @@
 <% end %>
 
 <script>
+var configBad = liquidFillGaugeDefaultSettings();
+configBad.circleColor = "#FF7777";
+configBad.textColor = "#FF4444";
+configBad.waveTextColor = "#FFAAAA";
+configBad.waveColor = "#FFDDDD";
+
+var configNeutral = liquidFillGaugeDefaultSettings();
+configNeutral.circleColor = "#FFE303";
+configNeutral.textColor = "#FBEC5D";
+configNeutral.waveTextColor = "#FBEC5D";
+configNeutral.waveColor = "#FFFFBA";
+
+var configGood = liquidFillGaugeDefaultSettings();
+configGood.circleColor = "#009900";
+configGood.textColor = "#0E5144";
+configGood.waveTextColor = "#6DA398";
+configGood.waveColor = "#246D5F";
+
+<% if @symbol_rating %>
+  <% if @symbol_rating < 33 %>
+    loadLiquidFillGauge("sentimentGraph", <%= @symbol_rating =%>, configBad);
+  <% elsif @symbol_rating < 66 %>
+    loadLiquidFillGauge("sentimentGraph", <%= @symbol_rating =%>, configNeutral);
+  <% else %>
+    loadLiquidFillGauge("sentimentGraph", <%= @symbol_rating =%>, configGood);
+  <% end %>
+<% end %>
+
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
     var matches, substringRegex;
