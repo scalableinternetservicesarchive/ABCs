@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151030213319) do
+ActiveRecord::Schema.define(version: 20151108023324) do
 
   create_table "companies", force: :cascade do |t|
     t.string   "symbol",     limit: 5
@@ -35,7 +35,8 @@ ActiveRecord::Schema.define(version: 20151030213319) do
     t.datetime "updated_at",                                       null: false
   end
 
-  add_index "sentiment_caches", ["company_id"], name: "index_sentiment_caches_on_company_id", unique: true, using: :btree
+  add_index "sentiment_caches", ["company_id"], name: "index_sentiment_caches_on_company_id-non-unique", using: :btree
+  add_index "sentiment_caches", ["created_at"], name: "index_sentiment_caches_on_created_at", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
