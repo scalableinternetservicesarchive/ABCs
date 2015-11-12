@@ -24,6 +24,17 @@ ActiveRecord::Schema.define(version: 20151108023324) do
 
   add_index "companies", ["symbol"], name: "index_companies_on_symbol", unique: true, using: :btree
 
+  create_table "favorite_companies", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.integer  "company_id", limit: 4
+    t.boolean  "active",               default: true, null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "favorite_companies", ["company_id"], name: "index_favorite_companies_on_company_id", using: :btree
+  add_index "favorite_companies", ["user_id"], name: "index_favorite_companies_on_user_id", using: :btree
+
   create_table "sentiment_caches", force: :cascade do |t|
     t.datetime "tweet_when"
     t.decimal  "score",                    precision: 6, scale: 3
