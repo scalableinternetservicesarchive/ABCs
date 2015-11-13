@@ -1,4 +1,13 @@
 <?xml version="1.0"?>
+      <!-- Uncomment the following to debug print your dynamic variables  --> 
+      <!--
+      <setdynvars sourcetype="eval" code="fun( {Pid, DynVars} ) ->
+        io:format([126, $p, 126, $n, 126, $n], [DynVars]),
+        ok end.">
+        <var name="dump" />
+      </setdynvars>
+      -->
+
 <!DOCTYPE tsung SYSTEM "/home/ec2-user/opt/tsung-1.5.0/share/tsung/tsung-1.0.dtd">
 <tsung loglevel="notice" version="1.0">
 
@@ -9,7 +18,7 @@
 
   <!-- Server side setup -->
   <servers>
-    <server host="ec2-54-148-61-114.us-west-2.compute.amazonaws.com" port="80" type="tcp"></server>
+    <server host="CHANGEME" port="80" type="tcp"></server>
   </servers>
 
 
@@ -75,7 +84,7 @@
       </request>
 
       <!-- wait for up to 2 seconds, user is picking a stock -->
-      <thinktime value="2" random="true"></thinktime> 
+      <thinktime value="2" random="true"></thinktime>
 
       <!-- Query for FB sentiment.  -->
       <request>
