@@ -5,7 +5,6 @@ class SentimentAnalyzer
   # Returns {symbol_rating: number, num_tweets: number, results: [json objs]}
   # Looks up symbol in cache. If in cache, return value if not expired.
   # Otherwise, fetch the tweets and process them.
-  # rubocop:disable MethodLength
   def self.get_results(symbol)
     symbol.upcase!
     if Company.find_by(symbol: symbol).nil?
@@ -20,7 +19,6 @@ class SentimentAnalyzer
                   author: cached_result.tweet_author,
                   text: cached_result.tweet_text }] }
   end
-  # rubocop:enable MethodLength
 
   class << self
     private
@@ -71,10 +69,14 @@ class SentimentAnalyzer
       tweet_map = {}
       tweets.each do |tweet|
         res = analyzer.process(tweet.text)
-        # Skip adding neutral
         next unless res
-        factor = res.sentiment == ':)' ? 1 : -1
-        score = factor * res.overall_probability
+        score = 0
+        case res.sentiment
+        when ':)'
+          score = res.overall_probability
+        when ':('
+          score = res.overall_probability - 1
+        end
         total_points += score
         results << res
         tweet_map[tweet] = score
@@ -89,7 +91,6 @@ class SentimentAnalyzer
     end
     # rubocop:enable MethodLength, AbcSize
 
-    # rubocop:disable MethodLength
     def get_closest(tweets, tweet_map, rating)
       # set smallest_diff to 10 to promise we'll get a tweet
       smallest_diff = 10 # on a scale of -1 to 1
@@ -104,7 +105,6 @@ class SentimentAnalyzer
       end
       closest
     end
-    # rubocop:enable MethodLength
 
     # Check cache for stored sentiment values
     def get_cached_sentiment(symbol)
