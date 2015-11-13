@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-      <!-- Uncomment the following to debug print your dynamic variables  --> 
+      <!-- Uncomment the following to debug print your dynamic variables  -->
       <!--
       <setdynvars sourcetype="eval" code="fun( {Pid, DynVars} ) ->
         io:format([126, $p, 126, $n, 126, $n], [DynVars]),
