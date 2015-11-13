@@ -20,13 +20,11 @@
 <div class="col-md-10 full-height no-padding">
   <div class="row no-padding item-info">
     <div class="col-md-2">
-      <% if @search_results %>
-        <% if @user_companies.include?(@search_results) %>
-          <%= button_to "Unwatch", remove_favorite_path(@search_results.id), method: :patch, remote: true, class: "favorite-btn-#{@search_results.id} btn btn-default"%>
+      <% if @company %>
+        <% if @user_companies.include?(@company) %>
+          <%= button_to "Unwatch", remove_favorite_path(@company.id), method: :patch, remote: true, class: "favorite-btn-#{@company.id} btn btn-default"%>
         <% else %>
-          <%= button_to "Watch", create_favorite_path(@search_results.id), remote: true, class: "favorite-btn-#{@search_results.id} btn btn-default" do%>
-            <i class="glyphicon glyphicon-star-empty">Watch</i>
-          <% end %>
+          <%= button_to "Watch", create_favorite_path(@company.id), remote: true, class: "favorite-btn-#{@company.id} btn btn-default" %>
         <% end %>
       <% end %>
     </div>
@@ -40,8 +38,8 @@
   </div>
   <div class="row no-padding">
     <div class="col-md-12">
-      <% if not @search_results %>
-        <h4>Search results for <%= @symbol %></h4>
+      <% if @company.nil? %>
+        <h4>Results for <%= @symbol %></h4>
         <table class="table table-hover" id="search_results">
           <% @search_results.each do |res| %>
             <tr data-link="<%= dashboard_path(res.symbol) %>">
@@ -223,7 +221,6 @@ $("tr").click(function() {
     $('#submit_container').after('<i class="fa fa-spinner fa-pulse fa-5x centered" style="display: none;" id="loading_image">')
   }
     $('#loading_image').show(); // show the animated image
-    $(this).data("link").attr('disabled','disabled'); // disable double submits
 })
 
 $('#symbol').typeahead({

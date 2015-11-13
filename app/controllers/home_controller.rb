@@ -14,11 +14,11 @@ class HomeController < ApplicationController
     return unless params['symbol']
     @symbol = params['symbol'].upcase
     # @search_results = Company.where("symbol like :prefix", prefix: "%#{@symbol}%")
-    @search_results = Company.find_by_symbol(@symbol)
 
+    @company = Company.find_by(symbol: @symbol)
     puts "===================="
-    if @search_results
-      puts @search_results
+    puts @company
+    if @company
       @quotes = Finance.get_quotes(@symbol, false)
       @hist = Finance.get_quotes(@symbol, true)
 
@@ -27,7 +27,7 @@ class HomeController < ApplicationController
       @num_tweets = @sentiments[:num_tweets]
       @results = @sentiments[:results]
     else
-
+      @search_results = Company.where("symbol like :prefix", prefix: "%#{@symbol}%")
     end
     puts "===================="
   rescue => e
