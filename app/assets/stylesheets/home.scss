@@ -1,0 +1,29 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.left-menu {
+  border-right: 1px solid #ebebeb;
+}
+
+.item-info {
+  border-bottom: 1px solid #ebebeb;
+  height: 40px;
+}
+
+.no-padding {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+.loss {
+  color: red;
+}
+
+.gain {
+  color: green;
+}
+
+.neutral {
+  color: dark-grey;
+}

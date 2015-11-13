@@ -13,6 +13,15 @@
  *= require_tree .
  *= require_self
  */
+html {
+  height: 100%;
+}
 body {
   padding-top: 60px;
+  height: 100%;
+}
+
+.full-height {
+  height: 100%;
+  overflow: auto;
 }
