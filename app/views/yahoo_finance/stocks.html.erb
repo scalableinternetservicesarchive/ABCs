@@ -9,9 +9,7 @@
 
 <% if @quotes && @hist %>
   <pre>
-    <% @quotes.each do |symbol, qt| %>
-      <%= "\n#{qt.name}\n#{qt.date}\n#{qt.time}\n\nLast Trade: #{qt.lastTrade}\nChange: #{qt.change}\nChange Points: #{qt.changePoints}\nChange Percent: #{qt.changePercent}%\nPrevious Close: #{qt.previousClose}\nOpen: #{qt.open}\nDay High: #{qt.dayHigh}\nDay Low: #{qt.dayLow}\nVolume: #{qt.volume}\nDay Range: #{qt.dayRange}\nAverage Daily Volume: #{qt.averageDailyVolume}\nBid: #{qt.bid}\nAsk: #{qt.ask}\n"%>
-    <% end %>
+      <%= "\n#{@quotes['name']}\n#{@quotes['date']}\n#{@quotes['time']}\n\nLast Trade: #{@quotes['lastTrade']}\nChange: #{@quotes['change']}\nChange Points: #{@quotes['changePoints']}\nChange Percent: #{@quotes['changePercent']}%\nPrevious Close: #{@quotes['previousClose']}\nOpen: #{@quotes['open']}\nDay High: #{@quotes['dayHigh']}\nDay Low: #{@quotes['dayLow']}\nVolume: #{@quotes['volume']}\nDay Range: #{@quotes['dayRange']}\nAverage Daily Volume: #{@quotes['averageDailyVolume']}\nBid: #{@quotes['bid']}\nAsk: #{@quotes['ask']}\n"%>
   </pre>
 <% end %>
 
