@@ -18,7 +18,7 @@ class SentimentAnalyzer
     #  results: [{ timestamp: cached_result.tweet_when,
     #              author: cached_result.tweet_author,
     #              text: cached_result.tweet_text }] }
-    Rails.cache.fetch(symbol, expires_in: 15.minutes) do
+    Rails.cache.fetch(symbol, expires_in: 24.hours) do
       fetch_sentiment(symbol)
     end
     Rails.cache.read symbol

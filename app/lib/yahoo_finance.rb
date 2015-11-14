@@ -66,11 +66,13 @@ class Finance
     # Download and cache the current quote for target stock
     def fetch_finance_curr(symbol)
       # Get new data
+
       #quote = YahooFinance::get_standard_quotes symbol
       #quote_json = quote[symbol].to_json
       #cache(quote_json, symbol, false)
 
       #JSON.parse(quote_json)
+
       Rails.cache.fetch "#{symbol}_curr" do
         quote = YahooFinance::get_standard_quotes symbol
         quote_json = quote[symbol].to_json
