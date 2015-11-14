@@ -14,6 +14,8 @@ gem 'bootstrap-sass', '3.2.0.0'
 
 # Use mysql as the database for Active Record
 gem 'mysql2', '~> 0.3.13'
+# Use Dalli gem for memcached
+gem 'dalli'
 
 # Use Devise for user sign up and authentication
 gem 'devise'
