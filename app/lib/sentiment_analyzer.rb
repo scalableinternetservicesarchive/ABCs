@@ -5,7 +5,6 @@ class SentimentAnalyzer
   # Returns {symbol_rating: number, num_tweets: number, results: [json objs]}
   # Looks up symbol in cache. If in cache, return value if not expired.
   # Otherwise, fetch the tweets and process them.
-  # rubocop:disable MethodLength
   def self.get_results(symbol)
     symbol.upcase!
     if Company.find_by(symbol: symbol).nil?
@@ -20,7 +19,6 @@ class SentimentAnalyzer
                   author: cached_result.tweet_author,
                   text: cached_result.tweet_text }] }
   end
-  # rubocop:enable MethodLength
 
   class << self
     private
@@ -35,7 +33,7 @@ class SentimentAnalyzer
       # rubocop:enable GlobalVars
 
       # Analyze the tweets
-      results, rating, num_tweets, closest = analyze_tweets(tweets)
+      rating, num_tweets, closest = analyze_tweets(tweets)
       symbol_rating = rating * 100
 
       # Cache the results
@@ -43,7 +41,9 @@ class SentimentAnalyzer
 
       { symbol_rating: symbol_rating,
         num_tweets: num_tweets,
-        results: results }
+        results: [{ timestamp: closest.created_at,
+                    author: closest.user.screen_name,
+                    text: closest.text }] }
     end
 
     # Store the analysis results in the DB
@@ -63,10 +63,10 @@ class SentimentAnalyzer
     end
 
     # Analyze tweets
-    # rubocop:disable MethodLength, AbcSize
+    # rubocop:disable AbcSize
     def analyze_tweets(tweets)
       analyzer = Analyzer.new
-      results = []
+      num_results = 0
       total_points = 0
       tweet_map = {}
       tweets.each do |tweet|
@@ -76,20 +76,19 @@ class SentimentAnalyzer
         factor = res.sentiment == ':)' ? 1 : -1
         score = factor * res.overall_probability
         total_points += score
-        results << res
+        num_results += 1
         tweet_map[tweet] = score
       end
 
       # if a bad ticker was entered or no tweets found, error
-      fail ArgumentError, "No data found for #{symbol}" if results.length == 0
+      fail ArgumentError, "No data found for #{symbol}" if num_results == 0
 
-      rating = total_points / results.length
+      rating = total_points / num_results
       # Get the closest ("average") tweet
-      [results, rating, results.length, get_closest(tweets, tweet_map, rating)]
+      [rating, num_results, get_closest(tweets, tweet_map, rating)]
     end
-    # rubocop:enable MethodLength, AbcSize
+    # rubocop:enable AbcSize
 
-    # rubocop:disable MethodLength
     def get_closest(tweets, tweet_map, rating)
       # set smallest_diff to 10 to promise we'll get a tweet
       smallest_diff = 10 # on a scale of -1 to 1
@@ -104,7 +103,6 @@ class SentimentAnalyzer
       end
       closest
     end
-    # rubocop:enable MethodLength
 
     # Check cache for stored sentiment values
     def get_cached_sentiment(symbol)
