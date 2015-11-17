@@ -11,25 +11,29 @@ class HomeController < ApplicationController
 
     @tickers = ticker_json(Company.all)
 
-    return unless params['symbol']
-    @symbol = params['symbol'].upcase
-    # @search_results = Company.where("symbol like :prefix", prefix: "%#{@symbol}%")
+    # return unless params['symbol']
+    if params['symbol'].present? and not params['symbol'].nil?
+      @symbol = params['symbol'].upcase
 
-    @company = Company.find_by(symbol: @symbol)
-    puts "===================="
-    puts @company
-    if @company
-      @quotes = Finance.get_quotes(@symbol, false)
-      @hist = Finance.get_quotes(@symbol, true)
+      @company = Company.find_by(symbol: @symbol)
+      if @company
+        @quotes = Finance.get_quotes(@symbol, false)
+        @hist = Finance.get_quotes(@symbol, true)
 
-      @sentiments = SentimentAnalyzer.get_results(@symbol)
-      @symbol_rating = @sentiments[:symbol_rating]
-      @num_tweets = @sentiments[:num_tweets]
-      @results = @sentiments[:results]
+        @sentiments = SentimentAnalyzer.get_results(@symbol)
+        @symbol_rating = @sentiments[:symbol_rating]
+        @num_tweets = @sentiments[:num_tweets]
+        @results = @sentiments[:results]
+      else
+        @search_results = Company.where("symbol like :prefix", prefix: "%#{@symbol}%")
+      end
     else
-      @search_results = Company.where("symbol like :prefix", prefix: "%#{@symbol}%")
+      @user_companies_quotes = Array.new
+      @user_companies.each do |c|
+        quote = Finance.get_quotes(c.symbol, false)
+        @user_companies_quotes.push(quote)
+      end
     end
-    puts "===================="
   rescue => e
     puts e.message
     render file: 'public/404.html', status: :not_found, layout: false
@@ -40,7 +44,4 @@ class HomeController < ApplicationController
     list.to_json
   end
 
-  def home_params
-    params.require(:symbol)
-  end
 end

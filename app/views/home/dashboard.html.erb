@@ -1,23 +1,28 @@
-<div class="col-md-2 left-menu full-height no-padding">
-<% if user_signed_in? %>
-  <div class="row no-padding">
-    <h4>Favorite Companies</h4>
-  </div>
+<%= javascript_include_tag 'liquidFillGauge' %>
+<%= javascript_include_tag 'multiLineChart' %>
 
-  <% if @user_companies %>
-    <table class="table table-hover" id="current_favorites">
-      <% @user_companies.each do |res| %>
-        <tr class="fav_company_<%= res.id %>" data-link="<%= dashboard_path(res.symbol) %>">
-          <td><%= res.symbol %></td>
-          <td><%= res.name %></td>
-        </tr>
+
+<div class="col-md-2 left-menu full-height scroll-enabled no-padding">
+  <% if user_signed_in? %>
+    <div class="section-head row no-padding">
+      <h4>Favorite Companies</h4>
+    </div>
+    <div class="margin-top">
+      <% if @user_companies %>
+        <table class="table table-hover" id="current_favorites">
+          <% @user_companies.each do |res| %>
+            <tr class="fav_company_<%= res.id %>" data-link="<%= dashboard_path(res.symbol) %>">
+              <td><%= res.symbol %></td>
+              <td><%= res.name %></td>
+            </tr>
+          <% end %>
+        </table>
       <% end %>
-    </table>
+    </div>
   <% end %>
-<% end %>
 </div>
 
-<div class="col-md-10 full-height no-padding">
+<div class="col-md-10 full-height scroll-enabled no-padding">
   <div class="row no-padding item-info">
     <div class="col-md-2">
       <% if @company %>
@@ -36,82 +41,75 @@
       <% end %>
     </div>
   </div>
+
   <div class="row no-padding">
     <div class="col-md-12">
       <% if @company.nil? %>
-        <h4>Results for <%= @symbol %></h4>
-        <table class="table table-hover" id="search_results">
-          <% @search_results.each do |res| %>
-            <tr data-link="<%= dashboard_path(res.symbol) %>">
-              <td class="col-md-4"><%= res.symbol %></td>
-              <td class="col-md-7"><%= res.name %></td>
-              <td class="col-md-1">
-              </td>
-            </tr>
+        <% if @search_results %>
+          <h4>Results for <%= @symbol %></h4>
+          <table class="table table-hover" id="search_results">
+            <% @search_results.each do |res| %>
+              <tr data-link="<%= dashboard_path(res.symbol) %>">
+                <td class="col-md-4"><%= res.symbol %></td>
+                <td class="col-md-7"><%= res.name %></td>
+                <td class="col-md-1">
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        <% else %>
+          <center><h3>Portfolio Summary</h3></center>
+          <% @user_companies_quotes.each do |quote| %>
+            <div class="row no-padding">
+              <h4><%= quote['name'] %></h4>
+              <h4>
+              <%= quote['lastTrade'] %>
+              <% if quote['changePoints'] < 0 %>
+                <font color="red"><%= quote['changePoints'] %> <small class="loss">(<%= quote['changePercent'] %>%)</small></font>
+              <% elsif quote['changePoints'] > 0 %>
+                <font color="green">+<%= quote['changePoints'] %> <small class="gain">(<%= quote['changePercent'] %>%)</small></font>
+              <% else %>
+                <font color="grey">+<%= quote['changePoints'] %> <small>(<%= quote['changePercent'] %>%)</small></font>
+              <% end %>
+              </h4>
+            </div>
+            <div class="row no-padding">
+              <div class="col-md-4 no-padding">Open: <div class="stat"><%= quote['open'] %></div></div>
+              <div class="col-md-4 no-padding">Previous Close: <div class="stat"><%= quote['previousClose'] %></div></div>
+              <div class="col-md-4 no-padding">Day Range: <div class="stat"><%= quote['dayRange'] %></div></div>
+            </div>
+            <hr>
           <% end %>
-        </table>
+        <% end %>
       <% else %>
 
       <div class="col-md-8 no-padding">
-<!--         <form action = "/favorite" method = "post">
-            <label type="submit" class="btn btn-primary">
-              <i class="glyphicon glyphicon-star-empty icon-white"></i>
-            </label>
-        </form> -->
         <% if @quotes && @hist %>
-          <% @quotes.each do |symbol, qt| %>
-            <h4><%= qt.name %></h4>
-            <h4>
-            <%= qt.lastTrade %>
-            <% if qt.changePoints < 0 %>
-              <font color="red"><%= qt.changePoints %> <small class="loss">(<%= qt.changePercent %>%)</small></font>
-            <% elsif qt.changePoints > 0 %>
-              <font color="green">+<%= qt.changePoints %> <small class="gain">(<%= qt.changePercent %>%)</small></font>
-            <% else %>
-              <font color="grey">+<%= qt.changePoints %> <small>(<%= qt.changePercent %>%)</small></font>
-            <% end %>
-            </h4>
-
-            <div class="row no-padding">
-            <div class="col-md-3 no-padding">Open:</div> <div class="col-md-4"><%= qt.open %></div>
-            </div>
-            <div class="row no-padding">
-            <div class="col-md-3 no-padding">Previous Close:</div> <div class="col-md-4"><%= qt.previousClose %></div>
-            </div>
-            <div class="row no-padding">
-            <div class="col-md-3 no-padding">Day Range:</div> <div class="col-md-4"><%= qt.dayRange %></div>
-            </div>
-            <div class="row no-padding">
-            <div class="col-md-3 no-padding">Volume:</div> <div class="col-md-4"><%= qt.volume %></div>
-            </div>
-
+          <h4><%= @quotes['name'] %></h4>
+          <h4>
+          <%= @quotes['lastTrade'] %>
+          <% if @quotes['changePoints'] < 0 %>
+            <font color="red"><%= @quotes['changePoints'] %> <small class="loss">(<%= @quotes['changePercent'] %>%)</small></font>
+          <% elsif @quotes['changePoints'] > 0 %>
+            <font color="green">+<%= @quotes['changePoints'] %> <small class="gain">(<%= @quotes['changePercent'] %>%)</small></font>
+          <% else %>
+            <font color="grey">+<%= @quotes['changePoints'] %> <small>(<%= @quotes['changePercent'] %>%)</small></font>
           <% end %>
+          </h4>
+
+          <div class="row no-padding">
+          <div class="col-md-3 no-padding">Open:</div> <div class="col-md-3 stat"><%= @quotes['open'] %></div>
+          <div class="col-md-3 no-padding">Previous Close:</div> <div class="col-md-3 stat"><%= @quotes['previousClose'] %></div>
+          </div>
+          <div class="row no-padding">
+          <div class="col-md-3 no-padding">Day Range:</div> <div class="col-md-3 stat"><%= @quotes['dayRange'] %></div>
+          <div class="col-md-3 no-padding">Volume:</div> <div class="col-md-3 stat"><%= @quotes['volume'] %></div>
+          </div>
+          <div class="row no-padding">
+            <div id="graph"></div>
+          </div>
         <% end %>
         <br>
-        <!-- TradingView Widget BEGIN -->
-        <script type="text/javascript" src="https://d33t3vvu2t2yu5.cloudfront.net/tv.js"></script>
-        <script type="text/javascript">
-        new TradingView.widget({
-          "width": "100%",
-          "symbol": "<%= @symbol %>",
-          "interval": "D",
-          "timezone": "Etc/UTC",
-          "theme": "White",
-          "style": "1",
-          "locale": "en",
-          "toolbar_bg": "rgba(241, 243, 246, 1)",
-          "hideideas": true,
-          "show_popup_button": true,
-          "popup_width": "1000",
-          "popup_height": "650"
-        });
-        </script>
-        <br>
-        <!-- TradingView Widget END -->
-
-        <!-- <pre>
-        <%= @hist %>
-        </pre> -->
       </div>
       <div class="col-md-4">
         <% if @symbol && @symbol_rating && @num_tweets %>
@@ -160,6 +158,13 @@ configGood.waveColor = "#246D5F";
     loadLiquidFillGauge("sentimentGraph", <%= @symbol_rating =%>, configGood);
   <% end %>
 <% end %>
+
+<% if @hist %>
+  var hist = <%= raw @hist %>;
+  loadGroupedBarChart(<%= raw @hist %>);
+<% end %>
+
+var symbols = <%= @tickers.html_safe %>;
 
 function addCompanyRow(company) {
   var row_class = 'fav_company_'+company.id;
@@ -213,7 +218,6 @@ var substringMatcher = function(strs) {
   };
 };
 
-var symbols = <%= @tickers.html_safe %>;
 
 $("tr").click(function() {
   window.location = $(this).data("link")
