@@ -15,7 +15,7 @@
         var self = d3.select(this);
         items[self.attr("data-legend")] = {
           pos : self.attr("data-legend-pos") || this.getBBox().y,
-          color : self.attr("data-legend-color") !== undefined ? self.attr("data-legend-color") : self.style("fill") != 'none' ? self.style("fill") : self.style("stroke")
+          color : self.attr("data-legend-color") != undefined ? self.attr("data-legend-color") : self.style("fill") != 'none' ? self.style("fill") : self.style("stroke")
         };
       });
 
