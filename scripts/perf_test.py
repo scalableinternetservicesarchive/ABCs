@@ -6,14 +6,19 @@ from subprocess import call
 import re
 import urllib2
 
+################ REQUIRED CONFIGURATION ################
+# This dictionary maps the instance type to the hostname
+servers = {
+    'm3med': 'CHANGEME_TO_HOSTNAME',
+    'm3large': 'CHANGEME_TO_HOSTNAME',
+    'm3xlarge': 'CHANGEME_TO_HOSTNAME',
+    }
+################ END REQUIRED CONFIGURATION ################
+
 conf = {
         'xml': 'https://raw.githubusercontent.com/scalableinternetservices/ABCs/testing/load_tests/critical.xml',
         'log_dir': '~/.tsung/log',
         'home': os.path.expanduser('~'),
-        }
-
-servers = {
-        'm3med': '',
         }
 
 
@@ -83,4 +88,4 @@ for instance, host in servers.iteritems():
     call("cd {0} && tar -vczf {1} {2}".format(os.path.dirname(new_dir), tar, instance), shell=True)
 
 
-    print colorize("Created {0}. Be sure to copy it to your computer to save it!".format(tar))
+    print colorize("Created {0}. Be sure to copy it to your computer to save it!".format(tar), bcolors.INFO)
