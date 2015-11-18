@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<!DOCTYPE tsung SYSTEM "/home/ec2-user/opt/tsung-1.5.0/share/tsung/tsung-1.0.dtd">
+<tsung loglevel="notice" version="1.0">
+
+  <!-- Client side setup -->
+  <clients>
+    <client host="localhost" use_controller_vm="true" maxusers='15000'/>
+  </clients>
+
+  <!-- Server side setup -->
+  <servers>
+    <server host="CHANGEME" port="80" type="tcp"></server>
+  </servers>
+
+  <load>
+    <arrivalphase phase="1" duration="30" unit="second">
+      <users arrivalrate="1" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="2" duration="30" unit="second">
+      <users arrivalrate="2" unit="second"></users>
+    </arrivalphase>
+    <arrivalphase phase="3" duration="30" unit="second">
+      <users arrivalrate="4" unit="second"></users>
+    </arrivalphase>
+   <arrivalphase phase="4" duration="30" unit="second">
+     <users arrivalrate="8" unit="second"></users>
+   </arrivalphase>
+   <arrivalphase phase="5" duration="30" unit="second">
+     <users arrivalrate="16" unit="second"></users>
+   </arrivalphase>
+   <arrivalphase phase="6" duration="30" unit="second">
+     <users arrivalrate="32" unit="second"></users>
+   </arrivalphase>
+   <arrivalphase phase="7" duration="30" unit="second">
+     <users arrivalrate="64" unit="second"></users>
+   </arrivalphase>
+   <arrivalphase phase="8" duration="30" unit="second">
+     <users arrivalrate="128" unit="second"></users>
+   </arrivalphase>
+   <arrivalphase phase="9" duration="30" unit="second">
+     <users arrivalrate="256" unit="second"></users>
+   </arrivalphase>
+   <arrivalphase phase="10" duration="30" unit="second">
+     <users arrivalrate="512" unit="second"></users>
+   </arrivalphase>
+  </load>
+
+  <options>
+    <!-- Set connection timeout to 2 seconds -->
+    <option name="global_ack_timeout" value="2000"></option>
+
+    <option type="ts_http" name="user_agent">
+      <user_agent probability="100">Mozilla/5.0 (Windows; U; Windows NT 5.2; fr-FR; rv:1.7.8) Gecko/20050511 Firefox/1.0.4</user_agent>
+    </option>
+  </options>
+
+  <sessions>
+    <session name="http-example" probability="50" type="ts_http">
+      <!-- this type of user doesn't log in and just checks out a few stocks -->
+
+      <!-- start out at the dashboard. -->
+      <request>
+        <http url='/' version='1.1' method='GET'></http>
+      </request>
+
+      <!-- wait for up to 2 seconds, user is admiring site -->
+      <thinktime value="2" random="true"></thinktime>
+
+      <!-- visit the sentiment form, as a user would do.-->
+      <request>
+        <http url='/sentiment' version='1.1' method='GET'></http>
+      </request>
+
+      <!-- wait for up to 2 seconds, user is picking a stock -->
+      <thinktime value="2" random="true"></thinktime>
+
+      <!-- Query for FB sentiment.  -->
+      <request>
+        <http url='/sentiment?symbol=FB' version='1.1' method='GET'></http>
+      </request>
+
+      <thinktime value="10" random="true"></thinktime>
+
+      <!-- Query for AAPL sentiment.  -->
+      <request>
+        <http url='/sentiment?symbol=AAPL' version='1.1' method='GET'></http>
+      </request>
+
+      <thinktime value="10" random="true"></thinktime>
+
+      <!-- Query for GOOGL sentiment.  -->
+      <request>
+        <http url='/sentiment?symbol=GOOGL' version='1.1' method='GET'></http>
+      </request>
+
+      <thinktime value="10" random="true"></thinktime>
+
+      <!-- Query for TSLA sentiment.  -->
+      <request>
+        <http url='/sentiment?symbol=TSLA' version='1.1' method='GET'></http>
+      </request>
+
+      <thinktime value="10" random="true"></thinktime>
+
+      <!-- visit the stock data form, as a user would do.-->
+      <request>
+        <http url='/stocks' version='1.1' method='GET'></http>
+      </request>
+
+      <!-- Query for FB stock data.  -->
+      <request>
+        <http url='/stocks?symbol=FB' version='1.1' method='GET'></http>
+      </request>
+
+      <thinktime value="10" random="true"></thinktime>
+
+      <!-- Query for AAPL stock data.  -->
+      <request>
+        <http url='/stocks?symbol=AAPL' version='1.1' method='GET'></http>
+      </request>
+
+      <thinktime value="10" random="true"></thinktime>
+
+      <!-- Query for GOOGL stock data.  -->
+      <request>
+        <http url='/stocks?symbol=GOOGL' version='1.1' method='GET'></http>
+      </request>
+
+      <thinktime value="10" random="true"></thinktime>
+
+      <!-- Query for TSLA stock data.  -->
+      <request>
+        <http url='/stocks?symbol=TSLA' version='1.1' method='GET'></http>
+      </request>
+
+      <thinktime value="10" random="true"></thinktime>
+    </session>
+
+    <session name="http-example1" probability="50" type="ts_http">
+      <!-- this user logs in and favorites -->
+      <!-- create a random number to make a unique email address -->
+      <setdynvars sourcetype="random_number" start="1" end="2500">
+        <var name="random_email_number" />
+      </setdynvars>
+
+      <!-- log the user in -->
+      <request subst="true">
+        <http url='/users/sign_in'
+              version='1.1'
+              method='POST'
+              contents='user[email]=test%%_random_email_number%%@test.com&amp;user[password]=password&amp;user[password_confirmation]=password'></http>
+      </request>
+
+      <!-- start out at the dashboard. -->
+      <request>
+        <http url='/dashboard' version='1.1' method='GET'></http>
+      </request>
+      <!-- wait for up to 2 seconds, user is figuring out favorites page -->
+      <thinktime value="2" random="true"></thinktime>
+
+      <!-- Look up GOOGL and favorite it -->
+      <request>
+        <http url='/dashboard/GOOGL' version='1.1' method='GET'></http>
+      </request>
+      <thinktime value="15" random="true"></thinktime>
+      <request>
+        <http url='/favorite/create/127' version='1.1' method='POST'></http>
+      </request>
+
+      <!-- Visit dashboard for favorited companies -->
+      <request>
+        <http url='/dashboard/TSLA' version='1.1' method='GET'></http>
+      </request>
+      <thinktime value="10" random="true"></thinktime>
+
+      <request>
+        <http url='/dashboard/FB' version='1.1' method='GET'></http>
+      </request>
+      <thinktime value="10" random="true"></thinktime>
+
+      <!-- User removes AAPL from favorited companies -->
+      <request>
+        <http url='/dashboard/AAPL' version='1.1' method='GET'></http>
+      </request>
+      <thinktime value="10" random="true"></thinktime>
+      <request>
+        <http url='/favorite/remove/204' version='1.1' method='POST'></http>
+      </request>
+
+      <!-- User logs out -->
+      <request subst="true">
+        <http url='/users/sign_out'
+              version='1.1'
+              method='POST'>
+        </http>
+      </request>
+    </session>
+  </sessions>
+</tsung>
