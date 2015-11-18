@@ -21,6 +21,7 @@ require 'csv'
 #  5: Sector
 #  6: industry
 #  7: Summary Quote
+puts 'Seeding companies'
 CSV.foreach('db/csv/companies.csv') do |row|
   c = Company.new
   c.industry = row[6]
@@ -30,3 +31,22 @@ CSV.foreach('db/csv/companies.csv') do |row|
   c.save
 end
 puts "There are now #{Company.count} rows in the Company table"
+
+puts 'Seeding users'
+aapl = Company.find_by(symbol: 'AAPL')
+tsla = Company.find_by(symbol: 'TSLA')
+fb = Company.find_by(symbol: 'FB')
+# GOOGL is left for the perf testing tool to favorite
+
+(1..2500).each do |i|
+  u = User.new
+  u.email = "test#{i}@test.com"
+  u.password = 'password'
+  u.password_confirmation = 'password'
+  u.companys << aapl
+  u.companys << tsla
+  u.companys << fb
+  u.save
+  puts "Saved user #{i}" if i % 10 == 0
+end
+puts "Seeded #{User.count} users in the User table"
