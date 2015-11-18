@@ -28,7 +28,11 @@ CSV.foreach('db/csv/companies.csv') do |row|
   c.name = row[1]
   c.sector = row[5]
   c.symbol = row[0]
-  c.save
+  begin
+    c.save
+  rescue
+    puts "Failed to save #{c.symbol}. It probably already exists in the DB"
+  end
 end
 puts "There are now #{Company.count} rows in the Company table"
 
@@ -38,15 +42,21 @@ tsla = Company.find_by(symbol: 'TSLA')
 fb = Company.find_by(symbol: 'FB')
 # GOOGL is left for the perf testing tool to favorite
 
-(1..2500).each do |i|
-  u = User.new
-  u.email = "test#{i}@test.com"
-  u.password = 'password'
-  u.password_confirmation = 'password'
-  u.companys << aapl
-  u.companys << tsla
-  u.companys << fb
-  u.save
-  puts "Saved user #{i}" if i % 10 == 0
+num_users_wanted = 2500
+if User.count < num_users_wanted
+  User.delete_all
+  (1..num_users_wanted).each do |i|
+    u = User.new
+    u.email = "test#{i}@test.com"
+    u.password = 'password'
+    u.password_confirmation = 'password'
+    u.companys << aapl
+    u.companys << tsla
+    u.companys << fb
+    u.save
+    puts "Saved user #{i}" if i % 10 == 0
+  end
+  puts "Seeded #{User.count} users in the User table"
+else
+  puts 'No need to seed users'
 end
-puts "Seeded #{User.count} users in the User table"
