@@ -58,7 +58,7 @@ os.mkdir(tmp_dir)
 
 # Run each test on each instance in order
 for instance, host in servers.iteritems():
-    print "Generating files for {0}".format(instance)
+    print "Generating files for {0} ({1})".format(instance, host)
     filename = os.path.join(tmp_dir, "test_{0}.xml".format(instance))
     make_xml(filename, host, args.xmltemplate)
 
