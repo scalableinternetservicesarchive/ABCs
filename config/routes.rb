@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get 'sentiment' => 'sentiment#check'
   get 'stocks' => 'yahoo_finance#stocks'
 
+  get 'dashboard/(:symbol)' => 'home#dashboard', as: :dashboard
+
   get 'favorite' => 'favorite#favorite'
 
   post 'favorite/create/:company_id' => 'favorite#create_favorite', as: :create_favorite

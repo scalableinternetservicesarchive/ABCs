@@ -1,0 +1,261 @@
+<%= javascript_include_tag 'liquidFillGauge' %>
+<%= javascript_include_tag 'multiLineChart' %>
+
+<% if user_signed_in? %>
+<div class="col-md-2 left-menu full-height scroll-enabled no-padding">
+    <div class="section-head row no-padding">
+      <h4>Favorite Companies</h4>
+    </div>
+    <div class="margin-top">
+      <% if @user_companies %>
+        <table class="table table-hover" id="current_favorites">
+          <% @user_companies.each do |res| %>
+            <tr class="fav_company_<%= res.id %>" data-link="<%= dashboard_path(res.symbol) %>">
+              <td><%= res.symbol %></td>
+              <td><%= res.name %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </div>
+</div>
+
+<div class="col-md-10 full-height scroll-enabled no-padding">
+<% else %>
+<div class="col-md-12 full-height scroll-enabled no-padding">
+<% end %>
+  <div class="row no-padding item-info">
+    <div class="col-md-2">
+      <% if @company %>
+        <% if user_signed_in? %>
+        <% if @user_companies.include?(@company) %>
+          <%= button_to "Unwatch", remove_favorite_path(@company.id), method: :patch, remote: true, class: "favorite-btn-#{@company.id} btn btn-default"%>
+        <% else %>
+          <%= button_to "Watch", create_favorite_path(@company.id), remote: true, class: "favorite-btn-#{@company.id} btn btn-default" %>
+        <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="col-md-10" align="right">
+      <%= form_tag({}, method: 'get', id: 'submit_container') do %>
+        <%= label_tag(:tweet, 'Symbol:', class: 'symbol') %>
+        <%= text_field_tag(:symbol) %>
+        <%= submit_tag('Search', class: 'btn btn-primary') %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row no-padding">
+    <div class="col-md-12">
+      <% if @company.nil? %>
+        <% if @search_results %>
+          <h4>Results for <%= @symbol %></h4>
+          <table class="table table-hover" id="search_results">
+            <% @search_results.each do |res| %>
+              <tr data-link="<%= dashboard_path(res.symbol) %>">
+                <td class="col-md-4"><%= res.symbol %></td>
+                <td class="col-md-7"><%= res.name %></td>
+                <td class="col-md-1">
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        <% else %>
+          <% if user_signed_in? %>
+            <center><h3>Portfolio Summary</h3></center>
+            <% @user_companies_quotes and @user_companies_quotes.each do |quote| %>
+              <div class="row no-padding">
+                <h4><%= quote['name'] %></h4>
+                <h4>
+                <%= quote['lastTrade'] %>
+                <% if quote['changePoints'] < 0 %>
+                  <font color="red"><%= quote['changePoints'] %> <small class="loss">(<%= quote['changePercent'] %>%)</small></font>
+                <% elsif quote['changePoints'] > 0 %>
+                  <font color="green">+<%= quote['changePoints'] %> <small class="gain">(<%= quote['changePercent'] %>%)</small></font>
+                <% else %>
+                  <font color="grey">+<%= quote['changePoints'] %> <small>(<%= quote['changePercent'] %>%)</small></font>
+                <% end %>
+                </h4>
+              </div>
+              <div class="row no-padding">
+                <div class="col-md-4 no-padding">Open: <div class="stat"><%= quote['open'] %></div></div>
+                <div class="col-md-4 no-padding">Previous Close: <div class="stat"><%= quote['previousClose'] %></div></div>
+                <div class="col-md-4 no-padding">Day Range: <div class="stat"><%= quote['dayRange'] %></div></div>
+              </div>
+              <hr>
+            <% end %>
+          <% else %>
+            <center><h3>Log in to see a summary of your favorite companies and take advantage of all the features of the dashboard</h3></center>
+          <% end %>
+        <% end %>
+      <% else %>
+
+      <div class="col-md-8 no-padding">
+        <% if @quotes && @hist %>
+          <h4><%= @quotes['name'] %></h4>
+          <h4>
+          <%= @quotes['lastTrade'] %>
+          <% if @quotes['changePoints'] < 0 %>
+            <font color="red"><%= @quotes['changePoints'] %> <small class="loss">(<%= @quotes['changePercent'] %>%)</small></font>
+          <% elsif @quotes['changePoints'] > 0 %>
+            <font color="green">+<%= @quotes['changePoints'] %> <small class="gain">(<%= @quotes['changePercent'] %>%)</small></font>
+          <% else %>
+            <font color="grey">+<%= @quotes['changePoints'] %> <small>(<%= @quotes['changePercent'] %>%)</small></font>
+          <% end %>
+          </h4>
+
+          <div class="row no-padding">
+          <div class="col-md-3 no-padding">Open:</div> <div class="col-md-3 stat"><%= @quotes['open'] %></div>
+          <div class="col-md-3 no-padding">Previous Close:</div> <div class="col-md-3 stat"><%= @quotes['previousClose'] %></div>
+          </div>
+          <div class="row no-padding">
+          <div class="col-md-3 no-padding">Day Range:</div> <div class="col-md-3 stat"><%= @quotes['dayRange'] %></div>
+          <div class="col-md-3 no-padding">Volume:</div> <div class="col-md-3 stat"><%= @quotes['volume'] %></div>
+          </div>
+          <div class="row no-padding">
+            <div id="graph"></div>
+          </div>
+        <% end %>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <% if @symbol && @symbol_rating && @num_tweets %>
+          <h4>Sentiment <small>(-100 to 100)</small></h4>
+          <p><small>Based on data from <%= @num_tweets %> tweets</small></p>
+          <svg id="sentimentGraph" width="100%" height="200"></svg>
+        <% end %>
+        <hr>
+        <% if @results %>
+          <% @results.each do |res| %>
+            <div class="row no-padding">
+              "<%= res[:text] %>"
+            </div>
+            <div class="row no-padding" align="right">
+              <div class="stat"><%= res[:timestamp] %></div>
+              <%= res[:author] %>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+var configBad = liquidFillGaugeDefaultSettings();
+configBad.circleColor = "#FF7777";
+configBad.textColor = "#FF4444";
+configBad.waveTextColor = "#FFAAAA";
+configBad.waveColor = "#FFDDDD";
+
+var configNeutral = liquidFillGaugeDefaultSettings();
+configNeutral.circleColor = "#FFE303";
+configNeutral.textColor = "#FBEC5D";
+configNeutral.waveTextColor = "#FBEC5D";
+configNeutral.waveColor = "#FFFFBA";
+
+var configGood = liquidFillGaugeDefaultSettings();
+configGood.circleColor = "#009900";
+configGood.textColor = "#0E5144";
+configGood.waveTextColor = "#6DA398";
+configGood.waveColor = "#246D5F";
+
+<% if @symbol_rating %>
+  <% if @symbol_rating < 33 %>
+    loadLiquidFillGauge("sentimentGraph", <%= @symbol_rating =%>, configBad);
+  <% elsif @symbol_rating < 66 %>
+    loadLiquidFillGauge("sentimentGraph", <%= @symbol_rating =%>, configNeutral);
+  <% else %>
+    loadLiquidFillGauge("sentimentGraph", <%= @symbol_rating =%>, configGood);
+  <% end %>
+<% end %>
+
+<% if @hist %>
+  var hist = <%= raw @hist %>;
+  loadGroupedBarChart(<%= raw @hist %>);
+<% end %>
+
+var symbols = <%= @tickers.html_safe %>;
+
+function addCompanyRow(company) {
+  var row_class = 'fav_company_'+company.id;
+  $('#current_favorites tr:last').after(
+    '<tr class=\"'+ row_class+'\"><td>'+company.symbol+'</td><td>'+company.name+'</td></tr>'
+    ).animate("slow");
+}
+
+function removeCompanyRow(company_id) {
+  var company_row = '.fav_company_'+company_id;
+  $(company_row).fadeOut(300, function(){ $(this).remove();});
+  // if company is in results, enable the favorite button
+  $('.favorite-btn-'+company_id).removeClass('disabled');
+}
+
+$(document).on('ajax:success', 'form', function(event, data, status, xhr) {
+  console.log("Hello!");
+  console.log(event);
+  console.log(data);
+  console.log(status);
+
+  if(data.action == "create") {
+    // var table = document.getElementById("myTable");
+    addCompanyRow(data.company)
+  }
+  else if(data.action == "remove") {
+    removeCompanyRow(data.company_id)
+  }
+  $('#loading_image').hide();
+});
+
+var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    cb(matches);
+  };
+};
+
+
+$("tr").click(function() {
+  window.location = $(this).data("link")
+  if ($('#loading_image').length == 0) {
+    $('#submit_container').after('<i class="fa fa-spinner fa-pulse fa-5x centered" style="display: none;" id="loading_image">')
+  }
+    $('#loading_image').show(); // show the animated image
+})
+
+$('#symbol').typeahead({
+    hint: true,
+    highlight: true,
+    minLength: 1
+  },
+  {
+     source: substringMatcher(symbols)
+  }
+);
+
+$('form').submit(function() {
+  if ($('#loading_image').length == 0) {
+    $('#submit_container').after('<i class="fa fa-spinner fa-pulse fa-5x centered" style="display: none;" id="loading_image">')
+  }
+    $('#loading_image').show(); // show the animated image
+    $(':submit',this).attr('disabled','disabled'); // disable double submits
+    return true; // allow regular form submission
+});
+</script>

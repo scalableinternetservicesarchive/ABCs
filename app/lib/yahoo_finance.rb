@@ -40,7 +40,13 @@ class Finance
 
       days_past = 365
       hist = YahooFinance::get_historical_quotes_days(symbol, days_past)
-      hist_json = hist.map { |e| { id: e } }.to_json
+      hist_array = Array.new
+      hist.each do |h|
+        point = {date: h[0], open: h[1], close: h[4], high: h[2], low: h[3]}
+        hist_array.push(point)
+      end
+      # hist_json = hist.map { |e| { id: e } }.to_json
+      hist_json = hist_array.to_json
 
       # Caching the historical data
       cache(hist_json, symbol, true)

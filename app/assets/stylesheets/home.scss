@@ -1,0 +1,88 @@
+// Place all the styles related to the home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.left-menu {
+  border-right: 1px solid #ebebeb;
+}
+
+.item-info {
+  border-bottom: 1px solid #ebebeb;
+  height: 40px;
+}
+
+.no-padding {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+.loss {
+  color: red;
+}
+
+.gain {
+  color: green;
+}
+
+.neutral {
+  color: dark-grey;
+}
+
+.section-head {
+  position: fixed;
+  background-color: white;
+}
+
+.margin-top {
+  margin-top: 39px;
+}
+
+.scroll-enabled {
+  overflow-y: auto;
+}
+
+.stat {
+  color: gray;
+}
+
+
+// D3 Graph Styling
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  fill:none;
+  stroke:#000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.legend rect {
+  fill:white;
+  stroke:black;
+  opacity:0.8;
+}
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* aspect ratio */
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
