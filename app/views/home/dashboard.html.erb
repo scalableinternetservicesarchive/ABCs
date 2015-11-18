@@ -1,9 +1,8 @@
 <%= javascript_include_tag 'liquidFillGauge' %>
 <%= javascript_include_tag 'multiLineChart' %>
 
-
+<% if user_signed_in? %>
 <div class="col-md-2 left-menu full-height scroll-enabled no-padding">
-  <% if user_signed_in? %>
     <div class="section-head row no-padding">
       <h4>Favorite Companies</h4>
     </div>
@@ -19,17 +18,21 @@
         </table>
       <% end %>
     </div>
-  <% end %>
 </div>
 
 <div class="col-md-10 full-height scroll-enabled no-padding">
+<% else %>
+<div class="col-md-12 full-height scroll-enabled no-padding">
+<% end %>
   <div class="row no-padding item-info">
     <div class="col-md-2">
       <% if @company %>
+        <% if user_signed_in? %>
         <% if @user_companies.include?(@company) %>
           <%= button_to "Unwatch", remove_favorite_path(@company.id), method: :patch, remote: true, class: "favorite-btn-#{@company.id} btn btn-default"%>
         <% else %>
           <%= button_to "Watch", create_favorite_path(@company.id), remote: true, class: "favorite-btn-#{@company.id} btn btn-default" %>
+        <% end %>
         <% end %>
       <% end %>
     </div>
@@ -58,27 +61,31 @@
             <% end %>
           </table>
         <% else %>
-          <center><h3>Portfolio Summary</h3></center>
-          <% @user_companies_quotes.each do |quote| %>
-            <div class="row no-padding">
-              <h4><%= quote['name'] %></h4>
-              <h4>
-              <%= quote['lastTrade'] %>
-              <% if quote['changePoints'] < 0 %>
-                <font color="red"><%= quote['changePoints'] %> <small class="loss">(<%= quote['changePercent'] %>%)</small></font>
-              <% elsif quote['changePoints'] > 0 %>
-                <font color="green">+<%= quote['changePoints'] %> <small class="gain">(<%= quote['changePercent'] %>%)</small></font>
-              <% else %>
-                <font color="grey">+<%= quote['changePoints'] %> <small>(<%= quote['changePercent'] %>%)</small></font>
-              <% end %>
-              </h4>
-            </div>
-            <div class="row no-padding">
-              <div class="col-md-4 no-padding">Open: <div class="stat"><%= quote['open'] %></div></div>
-              <div class="col-md-4 no-padding">Previous Close: <div class="stat"><%= quote['previousClose'] %></div></div>
-              <div class="col-md-4 no-padding">Day Range: <div class="stat"><%= quote['dayRange'] %></div></div>
-            </div>
-            <hr>
+          <% if user_signed_in? %>
+            <center><h3>Portfolio Summary</h3></center>
+            <% @user_companies_quotes and @user_companies_quotes.each do |quote| %>
+              <div class="row no-padding">
+                <h4><%= quote['name'] %></h4>
+                <h4>
+                <%= quote['lastTrade'] %>
+                <% if quote['changePoints'] < 0 %>
+                  <font color="red"><%= quote['changePoints'] %> <small class="loss">(<%= quote['changePercent'] %>%)</small></font>
+                <% elsif quote['changePoints'] > 0 %>
+                  <font color="green">+<%= quote['changePoints'] %> <small class="gain">(<%= quote['changePercent'] %>%)</small></font>
+                <% else %>
+                  <font color="grey">+<%= quote['changePoints'] %> <small>(<%= quote['changePercent'] %>%)</small></font>
+                <% end %>
+                </h4>
+              </div>
+              <div class="row no-padding">
+                <div class="col-md-4 no-padding">Open: <div class="stat"><%= quote['open'] %></div></div>
+                <div class="col-md-4 no-padding">Previous Close: <div class="stat"><%= quote['previousClose'] %></div></div>
+                <div class="col-md-4 no-padding">Day Range: <div class="stat"><%= quote['dayRange'] %></div></div>
+              </div>
+              <hr>
+            <% end %>
+          <% else %>
+            <center><h3>Log in to see a summary of your favorite companies and take advantage of all the features of the dashboard</h3></center>
           <% end %>
         <% end %>
       <% else %>
@@ -120,7 +127,13 @@
         <hr>
         <% if @results %>
           <% @results.each do |res| %>
-            <pre><%= res.to_json %></pre>
+            <div class="row no-padding">
+              "<%= res[:text] %>"
+            </div>
+            <div class="row no-padding" align="right">
+              <div class="stat"><%= res[:timestamp] %></div>
+              <%= res[:author] %>
+            </div>
           <% end %>
         <% end %>
       <% end %>
