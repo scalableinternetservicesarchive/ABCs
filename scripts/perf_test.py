@@ -71,15 +71,16 @@ for instance, host in servers.iteritems():
     result_dir = [f for f in os.listdir(os.path.expanduser(conf['log_dir'])) if re.match(r'[0-9]+.*', f)][0]
     result_dir = os.path.join(os.path.expanduser(conf['log_dir']), result_dir)
 
+    # Rename the generated test data directory
+    new_dir = os.path.join(os.path.dirname(result_dir), instance)
+    call("mv {0} {1}".format(result_dir, new_dir), shell=True)
+
     # Analyze the generated test data
-    call("cd {0} && tsung_stats.pl".format(result_dir))
+    call("cd {0} && tsung_stats.pl".format(new_dir), shell=True)
 
     # Package up the generated test data
     tar = os.path.join(conf['home'], "{0}.tar.gz".format(instance))
-    call("tar -vczf {0} {1}".format(tar, result_dir))
+    call("cd {0} && tar -vczf {1} {2}".format(os.path.dirname(new_dir), tar, instance), shell=True)
 
-    # Rename the generated test data directory
-    new_dir = os.path.join(os.path.dirname(result_dir), instance)
-    call("mv {0} {1}".format(result_dir, new_dir))
 
     print colorize("Created {0}. Be sure to copy it to your computer to save it!".format(tar))
