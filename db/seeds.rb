@@ -43,8 +43,7 @@ fb = Company.find_by(symbol: 'FB')
 # GOOGL is left for the perf testing tool to favorite
 
 num_users_wanted = 2500
-if User.count < num_users_wanted
-  User.delete_all
+if User.count == 0
   (1..num_users_wanted).each do |i|
     u = User.new
     u.email = "test#{i}@test.com"
@@ -58,5 +57,5 @@ if User.count < num_users_wanted
   end
   puts "Seeded #{User.count} users in the User table"
 else
-  puts 'No need to seed users'
+  puts "No need to seed users. #{User.count} already exist!"
 end
