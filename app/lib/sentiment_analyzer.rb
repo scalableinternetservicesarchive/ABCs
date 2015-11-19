@@ -71,10 +71,14 @@ class SentimentAnalyzer
       tweet_map = {}
       tweets.each do |tweet|
         res = analyzer.process(tweet.text)
-        # Skip adding neutral
         next unless res
-        factor = res.sentiment == ':)' ? 1 : -1
-        score = factor * res.overall_probability
+        score = 0
+        case res.sentiment
+        when ':)'
+          score = res.overall_probability
+        when ':('
+          score = res.overall_probability - 1
+        end
         total_points += score
         num_results += 1
         tweet_map[tweet] = score
