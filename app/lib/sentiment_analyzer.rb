@@ -11,13 +11,6 @@ class SentimentAnalyzer
       fail(ArgumentError,
            "#{symbol} is an invalid symbol! Not found in company database")
     end
-    #cached_result = get_cached_sentiment(symbol)
-    #return fetch_sentiment(symbol) unless cached_result
-    #{ symbol_rating: cached_result.score,
-    #  num_tweets: cached_result.num_tweets,
-    #  results: [{ timestamp: cached_result.tweet_when,
-    #              author: cached_result.tweet_author,
-    #              text: cached_result.tweet_text }] }
     Rails.cache.fetch(symbol, expires_in: 24.hours) do
       fetch_sentiment(symbol)
     end

@@ -13,14 +13,6 @@ class Finance
            "#{symbol} is an invalid symbol! Not found in company database")
     end
 
-    #cached_result = get_cached_data(symbol, is_hist)
-    #if is_hist
-    #  return fetch_finance_hist symbol unless cached_result
-    #  cached_result.hist_data
-    #else
-    #  return fetch_finance_curr symbol unless cached_result
-    #  JSON.parse(cached_result.curr_data)
-    #end
     if is_hist
       return fetch_finance_hist symbol
     else
@@ -46,13 +38,8 @@ class Finance
       # Set number of days of historical data to get
       days_past = 365
 
-      ## Caching the historical data
-      #cache(hist_json, symbol, true)
-
-      #hist_json
       Rails.cache.fetch "#{symbol}_hist" do
         hist = YahooFinance::get_historical_quotes_days(symbol, days_past)
-        #hist.map { |e| { id: e } }.to_json
         hist_array = Array.new
         hist.each do |h|
           point = { date: h[0], open: h[1], close: h[4], high: h[2], low: h[3] }
@@ -65,14 +52,6 @@ class Finance
 
     # Download and cache the current quote for target stock
     def fetch_finance_curr(symbol)
-      # Get new data
-
-      #quote = YahooFinance::get_standard_quotes symbol
-      #quote_json = quote[symbol].to_json
-      #cache(quote_json, symbol, false)
-
-      #JSON.parse(quote_json)
-
       Rails.cache.fetch "#{symbol}_curr" do
         quote = YahooFinance::get_standard_quotes symbol
         quote_json = quote[symbol].to_json
