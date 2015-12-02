@@ -42,7 +42,7 @@ tsla = Company.find_by(symbol: 'TSLA')
 fb = Company.find_by(symbol: 'FB')
 # GOOGL is left for the perf testing tool to favorite
 
-num_users_wanted = 2500
+num_users_wanted = 1
 if User.count == 0
   (1..num_users_wanted).each do |i|
     u = User.new
