@@ -1,5 +1,5 @@
 (function() {
-  d3.legend = function(g) {
+  legend = function(g) {
   g.each(function() {
     var g= d3.select(this),
         items = {},
@@ -48,48 +48,6 @@
   return g;
 };
 })();
-
-function resize() {
-    // update width
-    width = parseInt(d3.select('#graph').style('width'), 10);
-    width = width = $("#graph").width() - margin.left - margin.right;
-
-    // resize the chart
-    x.range([0, width]);
-    d3.select(chart.node().parentNode)
-        .style('height', (y.rangeExtent()[1] + margin.top + margin.bottom) + 'px')
-        .style('width', (width + margin.left + margin.right) + 'px');
-
-    chart.selectAll('rect.background')
-        .attr('width', width);
-
-    chart.selectAll('rect.percent')
-        .attr('width', function(d) { return x(d.percent); });
-
-    // update median ticks
-    var median = d3.median(chart.selectAll('.bar').data(),
-        function(d) { return d.percent; });
-
-    chart.selectAll('line.median')
-        .attr('x1', x(median))
-        .attr('x2', x(median));
-
-    // update axes
-    chart.select('.x.axis.top').call(xAxis.orient('top'));
-    chart.select('.x.axis.bottom').call(xAxis.orient('bottom'));
-}
-
-d3.select(window).on('resize', resize);
-
-d3.select("div#graph")
-   .append("div")
-   .classed("svg-container", true) //container class to make it responsive
-   .append("svg")
-   //responsive SVG needs these 2 attributes and no width and height attr
-   .attr("preserveAspectRatio", "xMinYMin meet")
-   .attr("viewBox", "0 0 600 400")
-   //class to make it responsive
-   .classed("svg-content-responsive", true);
 
 
 function loadGroupedBarChart(data) {
@@ -191,5 +149,5 @@ function loadGroupedBarChart(data) {
         .attr("class","legend")
         .attr("transform","translate(50,30)")
         .style("font-size","12px")
-        .call(d3.legend);
+        .call(legend);
 }
