@@ -25,16 +25,16 @@ class Requester(multiprocessing.Process):
         self.symbol = symbol
 
     def run(self):
-        target = self.host + "/sentiment?symbol={}".format(self.symbol)
+        target = self.host + "/sentiment?symbol={0}".format(self.symbol)
         if not target.startswith("http://"):
-            target = "http://{}".format(target)
+            target = "http://{0}".format(target)
 
-        print "Requesting: {}".format(target)
+        print "Requesting: {0}".format(target)
         try:
             urllib2.urlopen(target)
-            print colorize("       Got: {}".format(target), bcolors.INFO)
+            print colorize("       Got: {0}".format(target), bcolors.INFO)
         except:
-            print colorize("    FAILED: {}".format(target), bcolors.FAIL)
+            print colorize("    FAILED: {0}".format(target), bcolors.FAIL)
 
 
 # Tickers to test with
@@ -46,7 +46,7 @@ parser.add_argument('hostname', help="the hostname of the server")
 parser.add_argument('-s',
                     '--symbols',
                     nargs='+',
-                    help='Symbols to lookup (default = {})'
+                    help='Symbols to lookup (default = {0})'
                     .format(' '.join(default_symbols)),
                     default=default_symbols)
 args = parser.parse_args()
