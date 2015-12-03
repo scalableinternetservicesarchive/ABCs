@@ -4,7 +4,7 @@
 
   <!-- Client side setup -->
   <clients>
-    <client host="localhost" use_controller_vm="true" maxusers='15000'/>
+    <client host="localhost" use_controller_vm="true" maxusers='25000'/>
   </clients>
 
   <!-- Server side setup -->
